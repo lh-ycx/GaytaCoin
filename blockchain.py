@@ -143,7 +143,7 @@ def mine():
     return render_template("mine.html", response_message=response)
 
 
-@app.route('/transactions/new', methods=['GET','POST'])
+@app.route('/transactions', methods=['GET','POST'])
 def new_transaction():
     '''
     values = request.get_json()
