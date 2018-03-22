@@ -3,8 +3,16 @@ import json
 from textwrap import dedent
 from time import time
 from uuid import uuid4
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
+from flask_wtf import Form
+from wtforms import StringField,SubmitField,DecimalField
+from wtforms.validators import DataRequired
 
+class MyForm(Form):
+    sender = StringField('sender', validators=[DataRequired()])
+    recipient = StringField('recipient',validators=[DataRequired()])
+    amount = DecimalField('amount',validators=[DataRequired()])
+    submit = SubmitField('submit')
 
 class Blockchain(object):
     def __init__(self):
@@ -135,21 +143,23 @@ def mine():
     return jsonify(response), 200
 
 
-@app.route('/transactions/new', methods=['POST'])
+@app.route('/transactions/new', methods=['GET','POST'])
 def new_transaction():
+    '''
     values = request.get_json()
 
     # Check that the required fields are in the POST'ed data
     required = ['sender', 'recipient', 'amount']
     if not all(k in values for k in required):
         return 'Missing values', 400
+    '''
+    form = MyForm(csrf_enabled=False)
+    if form.validate_on_submit():
+        index = blockchain.new_transaction(form.data['sender'], form.data['recipient'], form.data['amount'])
+        response = {'message': f'Transaction will be added to Block {index}'}
+        return jsonify(response), 201
 
-    # Create a new Transaction
-    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
-
-    response = {'message': f'Transaction will be added to Block {index}'}
-    return jsonify(response), 201
-
+    return render_template('new_transaction.html',form=form)
 
 @app.route('/chain', methods=['GET'])
 def full_chain():

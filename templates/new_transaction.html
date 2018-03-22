@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title> new transaction </title>
+</head>
+<body>
+    <form class="am-form am-form-horizontal" method="POST" >
+        <div>
+            {{ form.sender.label() }}
+            <div>{{ form.sender(type="text",size="30") }}</div>
+        </div>
+        <div>
+            {{ form.recipient.label() }}
+            <div>{{ form.recipient(type="text",size="30") }}</div>
+        </div>
+        <div>
+                {{ form.amount.label() }}
+                <div>{{ form.amount(type="number",size="20") }}</div>
+        </div>
+        <div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </div>
+    </form>
+</body>
