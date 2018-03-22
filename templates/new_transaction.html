@@ -5,7 +5,8 @@
     <title> new transaction </title>
 </head>
 <body>
-    <form class="am-form am-form-horizontal" method="POST" >
+    {% include 'index.html' %}
+    <form method="POST">
         <div>
             {{ form.sender.label() }}
             <div>{{ form.sender(type="text",size="30") }}</div>
