@@ -6,6 +6,12 @@
 </head>
 <body>
     {% include 'index.html' %}
+    {% if message %}
+    <div>
+        <p>{{ message }}</p>
+    </div>
+    {% endif %}
+    {% if form %}
     <form method="POST">
         <div>
             {{ form.sender.label() }}
@@ -25,4 +31,5 @@
             </div>
         </div>
     </form>
+    {% endif %}
 </body>
