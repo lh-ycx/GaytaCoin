@@ -26,16 +26,8 @@
     {% if form %}
     <form method="POST">
         <div>
-            {{ form.sender.label() }}
-            <div>{{ form.sender(type="text",size="30") }}</div>
-        </div>
-        <div>
-            {{ form.recipient.label() }}
-            <div>{{ form.recipient(type="text",size="30") }}</div>
-        </div>
-        <div>
-                {{ form.amount.label() }}
-                <div>{{ form.amount(type="number",size="20") }}</div>
+            {{ form.node.label() }}
+            <div>{{ form.node(type="text",size="50") }}</div>
         </div>
         <div>
             <div>
