@@ -1,5 +1,6 @@
 import hashlib
 import json
+import decimal 
 from textwrap import dedent
 from time import time
 from uuid import uuid4
@@ -155,7 +156,9 @@ def new_transaction():
     '''
     form = MyForm(csrf_enabled=False)
     if form.validate_on_submit():
-        index = blockchain.new_transaction(form.data['sender'], form.data['recipient'], form.data['amount'])
+        amount = form.data['amount']
+        
+        index = blockchain.new_transaction(form.data['sender'], form.data['recipient'], float(amount))
         response = {'message': f'Transaction will be added to Block {index}'}
         return render_template("new_transaction.html",message=response)
 
