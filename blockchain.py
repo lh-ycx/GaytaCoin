@@ -251,7 +251,7 @@ def full_chain():
         'length': len(blockchain.chain),
     }
     
-    return render_template("chain.html",chain=response)
+    return render_template("chain.html",chain=blockchain.chain,length=len(blockchain.chain))
     
 
 @app.route('/', methods=['GET'])

@@ -7,6 +7,35 @@
 <body>
     {% include 'index.html' %}
     <div>
-        {{ chain }}
+        <p>chain length:</p>
+        <p>{{ length }}</p>
+    </div>
+   
+    
+    <table>
+        <thead>
+            <tr>
+                <th>index</th>
+                <th>timestamp</th>
+                <th>transactions</th>
+                <th>proof</th>
+                <th>previous_hash</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for block in chain %}
+            <tr>
+                <td>{{block.index}}</td>
+                <td>{{block.timestamp}}</td>
+                <td>{{block.transactions}}</td>
+                <td>{{block.proof}}</td>
+                <td>{{block.previous_hash}}</td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    
+    <div>
+        
     </div>
 </body>
