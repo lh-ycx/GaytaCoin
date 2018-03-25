@@ -1,5 +1,6 @@
 import hashlib
 import json
+import decimal
 from textwrap import dedent
 from time import time
 from uuid import uuid4
@@ -7,6 +8,13 @@ from flask import Flask, jsonify, request, render_template
 from flask_wtf import Form
 from wtforms import StringField,SubmitField,DecimalField
 from wtforms.validators import DataRequired
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal):
+            return float(obj)
+        return super(DecimalEncoder, self).default(obj)
 
 class MyForm(Form):
     sender = StringField('sender', validators=[DataRequired()])
@@ -73,7 +81,8 @@ class Blockchain(object):
         """
 
         # We must make sure that the Dictionary is Ordered, or we'll have inconsistent hashes
-        block_string = json.dumps(block, sort_keys=True).encode()
+        print(block)
+        block_string = json.dumps(block, sort_keys=True, cls=DecimalEncoder).encode()
         return hashlib.sha256(block_string).hexdigest()
 
     def proof_of_work(self, last_proof):
