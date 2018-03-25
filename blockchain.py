@@ -310,17 +310,11 @@ def consensus():
     replaced = blockchain.resolve_conflicts()
 
     if replaced:
-        response = {
-            'message': 'Our chain was replaced',
-            'new_chain': blockchain.chain
-        }
-    else:
-        response = {
-            'message': 'Our chain is authoritative',
-            'chain': blockchain.chain
-        }
+        message='Our chain was replaced'
+    else:    
+        message='Our chain is authoritative'        
 
-    return render_template("resolve.html",message=response)
+    return render_template("resolve.html",message=message,chain=blockchain.chain)
     #return jsonify(response), 200
 
 
