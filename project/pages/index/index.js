@@ -4,18 +4,32 @@ const app = getApp()
 
 Page({
   data: {
-    motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    indexmenu: [],
   },
   //事件处理函数
-  bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
+  fetchData: function () {
+    this.setData({
+      indexmenu: [
+        {
+          'id':0,
+          'icon': './../../images/scan.png',
+          'text': '扫码签到',
+          'url': 'scan'
+        },       
+        {
+          'id':1,
+          'icon': './../../images/my.png',
+          'text': '我的签到',
+          'url': 'my'
+        }
+      ]
     })
   },
   onLoad: function () {
+    this.fetchData();
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -50,5 +64,49 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
+  },
+  nav_changeImg: function(event){
+    //console.log(event['target']['id'])
+    if(event['target']['id']==0){
+      this.setData({
+        indexmenu: [
+          {
+            'id': 0,
+            'icon': './../../images/scan_ontap.png',
+            'text': '扫码签到',
+          },
+          {
+            'id': 1,
+            'icon': './../../images/my.png',
+            'text': '我的签到',
+          }
+        ]
+      })
+      wx.navigateTo({
+        url: '../scan/scan'
+      })
+    }
+    else{
+      this.setData({
+        indexmenu: [
+          {
+            'id': 0,
+            'icon': './../../images/scan.png',
+            'text': '扫码签到',
+          },
+          {
+            'id': 1,
+            'icon': './../../images/my_ontap.png',
+            'text': '我的签到',
+          }
+        ]
+      })
+      wx.navigateTo({
+        url: '../my/my'
+      })
+    }
+  },
+  onHide: function(){
+    this.fetchData()
   }
 })

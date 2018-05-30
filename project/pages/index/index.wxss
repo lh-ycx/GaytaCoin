@@ -1,4 +1,6 @@
 /**index.wxss**/
+@import "../../style/weui.wxss";
+
 .userinfo {
   display: flex;
   flex-direction: column;
@@ -16,6 +18,35 @@
   color: #aaa;
 }
 
-.usermotto {
-  margin-top: 200px;
+.index-menu{
+  margin-top: 175rpx;
+	width: 100%;
+	display: flex;
+	background: #fff;
+  justify-content: center;
+  align-items: center;
+  align-content:space-between;
 }
+.index-menu-item{
+  flex: auto;
+	text-align: center;
+	margin-top: 10rpx;
+	padding: 20rpx 20rpx;
+	box-sizing: border-box;
+	margin-bottom: -1rpx;
+}
+.index-menu-item image{
+	width: 125rpx;
+	height: 125rpx;
+}
+.index-menu-item text{
+	display: block;
+	font-size: 36rpx;
+  font-family: 微软雅黑;
+	line-height: 1.4;
+	white-space: nowrap;
+}
+
+/*.navigator-hover{
+  color:red;
+}*/
