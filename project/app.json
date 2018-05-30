@@ -1,11 +1,14 @@
 {
-  "pages":[
-    "pages/register/register"
+  "pages": [
+    "pages/index/index",
+    "pages/register/register",
+    "pages/scan/scan",
+    "pages/my/my"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
+  "window": {
+    "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "GataCoin",
-    "navigationBarTextStyle":"black"
+    "navigationBarTitleText": "block签",
+    "navigationBarTextStyle": "black"
   }
 }

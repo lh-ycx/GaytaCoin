@@ -8,21 +8,20 @@
 }
 
 .userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
+  width: 150rpx;
+  height: 150rpx;
   margin: 20rpx;
   border-radius: 50%;
 }
 
 .userinfo-nickname {
-  color: #aaa;
+  color: white;
 }
 
 .index-menu{
   margin-top: 175rpx;
 	width: 100%;
 	display: flex;
-	background: #fff;
   justify-content: center;
   align-items: center;
   align-content:space-between;
@@ -45,6 +44,7 @@
   font-family: 微软雅黑;
 	line-height: 1.4;
 	white-space: nowrap;
+  color: white;
 }
 
 /*.navigator-hover{

@@ -15,13 +15,13 @@ Page({
       indexmenu: [
         {
           'id':0,
-          'icon': './../../images/scan.png',
+          'icon': './../../images/scan1.png',
           'text': '扫码签到',
           'url': 'scan'
         },       
         {
           'id':1,
-          'icon': './../../images/my.png',
+          'icon': './../../images/my1.png',
           'text': '我的签到',
           'url': 'my'
         }
@@ -77,7 +77,7 @@ Page({
           },
           {
             'id': 1,
-            'icon': './../../images/my.png',
+            'icon': './../../images/my1.png',
             'text': '我的签到',
           }
         ]
@@ -91,7 +91,7 @@ Page({
         indexmenu: [
           {
             'id': 0,
-            'icon': './../../images/scan.png',
+            'icon': './../../images/scan1.png',
             'text': '扫码签到',
           },
           {
