@@ -1,7 +1,7 @@
 {
   "pages": [
+    "pages/authorize/authorize",
     "pages/index/index",
-    "pages/register/register",
     "pages/scan/scan",
     "pages/my/my"
   ],

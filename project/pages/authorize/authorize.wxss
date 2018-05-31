@@ -1,0 +1,23 @@
+.button-box{
+  margin-top: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button{
+  width: 200rpx;
+  height: 200rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+  color:azure;
+  font-family: kaiti;
+  background-color:lightskyblue;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.button-hover{
+  color:azure;
+  background-color:lightskyblue;
+  top:5rpx;
+}
