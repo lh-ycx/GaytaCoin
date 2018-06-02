@@ -137,12 +137,12 @@ class Teacher_Manager(object):
     
     def getRegisterListbyCourseId(self,courseId):
         res = self.db.Register.find({"courseId":courseId}).sort({"registerId":1})
-        dict = {"openid":[],"courseId":[],"timestamp":[]}
-        list = []
+        dic = {"openid":[],"courseId":[],"timestamp":[]}
+        lis = []
         for c in res:
-            dict["openid"] = c["openid"]
-            dict["courseId"] = c["courseId"]
-            dict["timestamp"] = c["timestamp"]
-            list.append(dict)
+            dic["openid"] = c["openid"]
+            dic["courseId"] = c["courseId"]
+            dic["timestamp"] = c["timestamp"]
+            lis.append(dic)
 
-        return list 
+        return lis
