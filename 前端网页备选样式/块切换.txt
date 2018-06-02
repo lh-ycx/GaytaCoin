@@ -1,0 +1,4 @@
+https://www.html5tricks.com/15-jquery-html5-image-player.html
+https://www.html5tricks.com/demo/jquery-layered-text-player/index.html
+https://www.html5tricks.com/demo/jquery-card-image-player/index.html
+https://www.html5tricks.com/html5-css3-elasticity.html
