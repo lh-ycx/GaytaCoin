@@ -1,0 +1,11 @@
+import json
+from flask_pymongo import flask_pymongo
+class Course_Manager(object):
+    def __init__(self,db):
+        self.db = db
+    
+    def getCourseName(self,courseId):
+        res = self.db.Courses.find_one({"courseId":courseId})['courseName']
+        if res is None:
+            return False
+        return res
