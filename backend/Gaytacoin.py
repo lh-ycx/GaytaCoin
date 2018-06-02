@@ -125,7 +125,7 @@ def teacher_login():
     password = j_data['password']
 
     res = teacher_manager.checkPassword(teacherId,password)
-    return json.dumps({"response_code":int(res))
+    return json.dumps({"response_code":int(res)})
 
 #查看教师信息
 @app.route('/teacher/info',methods=['POST'])
@@ -176,7 +176,7 @@ def delCourse():
 
 #查看课程签到记录
 @app.route('/teacher/registerList',methods=['POST'])
-def teacher_register_info()
+def teacher_register_info():
     data = request.data
     j_data = yaml.safe_load(data)
 
@@ -184,7 +184,7 @@ def teacher_register_info()
 
     list = teacher_manager.getRegisterListbyCourseId(courseId)
     res = []
-    dict = ["stuName":[],"stuId":[],"courseName":[],"timestamp":[]]
+    dict = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
     if list:
         for l in list:
             dict["stuName"] = student_manager.getstuName(l["openid"])
