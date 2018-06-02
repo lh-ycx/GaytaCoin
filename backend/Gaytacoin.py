@@ -62,7 +62,7 @@ def get_openid():
     return jsonify(res)
 
 #完善信息
-@app.route('/student/complete'.methods = ['POST'])
+@app.route('/student/complete',methods = ['POST'])
 def complete_student():
 
     data = request.data
@@ -98,7 +98,7 @@ def student_register_info():
     return student_manager.getRegisterListbyopenid(openid)
 
 #签到(返回的是response_code)
-@app.route('/student/register'.methods=['POST'])
+@app.route('/student/register',methods=['POST'])
 def student_register():
     data = request.data
 
@@ -162,7 +162,7 @@ def addCourse():
     return teacher_manager.addCourse(teacherId,course_name)
 
 #删除课程
-@app.route('/teacher/delCourse'.methods=['POST'])
+@app.route('/teacher/delCourse',methods=['POST'])
 def delCourse():
     data = request.data
     j_data = yaml.safe_load(data)

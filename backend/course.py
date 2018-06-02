@@ -1,5 +1,5 @@
 import json
-from flask_pymongo import flask_pymongo
+from flask_pymongo import PyMongo
 class Course_Manager(object):
     def __init__(self,db):
         self.db = db

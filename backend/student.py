@@ -29,7 +29,7 @@ class Student_Manager(object):
             dic['courseId'] = c['courseId']
             dic['timestamp'] = c['timestamp'] 
             res.append(dic)
-        return json.dumps([{'response_code':1,res}])
+        return json.dumps([{'response_code':1},res])
 
     def addStudent(self,openid,stuId,stuName):
 
