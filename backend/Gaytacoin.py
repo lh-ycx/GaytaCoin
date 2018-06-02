@@ -182,17 +182,17 @@ def teacher_register_info():
 
     courseId = j_data['courseId']
 
-    list = teacher_manager.getRegisterListbyCourseId(courseId)
+    lis = teacher_manager.getRegisterListbyCourseId(courseId)
     res = []
-    dict = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
-    if list:
-        for l in list:
-            dict["stuName"] = student_manager.getstuName(l["openid"])
-            dict["stuID"] = student_manager.getstuId(l["openid"])
-            dict["courseName"] = course_manager.getCourseName(l["courseId"])
-            dict["timestamp"] = l["timestamp"]
-            res .append(dict)
-        return json.dumps([{"response_code":1,res}])
+    dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
+    if lis:
+        for l in lis:
+            dic["stuName"] = student_manager.getstuName(l["openid"])
+            dic["stuID"] = student_manager.getstuId(l["openid"])
+            dic["courseName"] = course_manager.getCourseName(l["courseId"])
+            dic["timestamp"] = l["timestamp"]
+            res .append(dic)
+        return json.dumps([{"response_code":1},res])
     else:
         return json.dumps({"response_code":0})
 

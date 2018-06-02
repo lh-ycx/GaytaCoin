@@ -21,14 +21,14 @@ class Student_Manager(object):
         if cursor is None:
             return json.dumps({'response_code':0})
         res = []
-        dict = {"registerId":[],"openid":[],"courseId":[],"timestamp":[]}
+        dic = {"registerId":[],"openid":[],"courseId":[],"timestamp":[]}
         
         for c in cursor:
-            dict['registerId'] = c['registerId']
-            dict['openid'] = c['openid']
-            dict['courseId'] = c['courseId']
-            dict['timestamp'] = c['timestamp'] 
-            res.append(dict)
+            dic['registerId'] = c['registerId']
+            dic['openid'] = c['openid']
+            dic['courseId'] = c['courseId']
+            dic['timestamp'] = c['timestamp'] 
+            res.append(dic)
         return json.dumps([{'response_code':1,res}])
 
     def addStudent(self,openid,stuId,stuName):
@@ -84,11 +84,11 @@ class Student_Manager(object):
             return json.dumps({"response_code":0})
 
         cursor = self.db.Register.find({})
-        list = []
+        lis = []
         for c in cursor:
-            list.append (c['registerId'])
+            lis.append (c['registerId'])
 
-        registerId = max(list) + 1
+        registerId = max(lis) + 1
 
         self.db.Register.insert_one({"registerId":registerId,"openid":openid,"courseId":courseId,"timestamp":timestamp})
 
