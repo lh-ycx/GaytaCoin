@@ -1,1 +1,31 @@
-/* pages/my/my.wxss */
+.my-signin-item{
+	display: flex;
+	padding: 20rpx;
+	border-bottom: 1rpx solid #ddd;
+}
+.signin-icon{
+	width: 200rpx;
+	height: 156rpx;
+}
+.signin-icon image{
+	width: 200rpx;
+	height: 156rpx;
+}
+
+.my-signin-text{
+	flex: 1;
+	margin-left: 20rpx;
+	width: 100%;
+}
+.my-signin-title{
+	color: #333;
+	width: 100%;
+	font-size: 34rpx;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.my-signin-text text{
+	display: block;
+	color: #888;
+}

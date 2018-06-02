@@ -1,2 +1,14 @@
-<!--pages/my/my.wxml-->
-<text>pages/my/my.wxml</text>
+<scroll-view scroll-y>
+  <view class="my-signin-list">
+    <view class="my-signin-item" wx:for="{{signinlist}}" wx:key="{{item.id}}">
+      <view class="signin-icon">
+        <image src="{{item.iconurl}}" mode="aspectFill"></image>
+      </view>
+      <view class="my-signin-text">
+        <view class="my-signin-title">{{item.course}}</view>
+        <text>时间：{{item.time}}</text>
+        <text>签到者：{{item.student}}</text>
+      </view>
+    </view>
+  </view>
+</scroll-view>

@@ -10,8 +10,9 @@ button{
   height: 200rpx;
   margin: 20rpx;
   border-radius: 50%;
-  color:azure;
-  font-family: kaiti;
+  color: ivory;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
   background-color:lightskyblue;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
@@ -19,5 +20,15 @@ button{
 .button-hover{
   color:azure;
   background-color:lightskyblue;
-  top:5rpx;
+  top:7rpx;
+}
+
+progress {
+  width: 200px;
+  margin:0 auto;
+}
+
+.load-progess{
+  text-align: center;
+  margin-top: 70%;
 }

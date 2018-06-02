@@ -1,3 +1,7 @@
-<view class="button-box">
+<view wx:if="{{!loading}}" class="button-box">
   <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" hover-class='button-hover'>授权开启block签</button>
+</view>
+<view wx:if="{{loading}}" class="load-progess" >
+  <progress percent="{{percentage}}" color="pink" active active-mode="forwards"/>
+  <text>正在进入</text>
 </view>

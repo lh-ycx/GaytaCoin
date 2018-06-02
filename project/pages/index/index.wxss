@@ -18,6 +18,11 @@
   color: white;
 }
 
+.userinfo-gender{
+  width: 35rpx;
+  height: 35rpx;
+}
+
 .index-menu{
   margin-top: 175rpx;
 	width: 100%;
