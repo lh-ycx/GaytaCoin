@@ -9,7 +9,7 @@ from blockchain import Blockchain
 from time import time
 from uuid import uuid4
 from urllib.parse import urlparse
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template,make_response
 from flask_cors import *
 from flask_wtf import Form
 from wtforms import StringField,SubmitField,DecimalField
