@@ -34,7 +34,7 @@ node_identifier = str(uuid4()).replace('-', '')
 
 @app.before_request
 def initial():
-    global student_manager , teacher_manager
+    global student_manager , teacher_manager,course_manager
     db = mongo.db
     student_manager = Student_Manager(db)
     teacher_manager = Teacher_Manager(db)
