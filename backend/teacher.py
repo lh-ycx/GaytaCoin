@@ -91,7 +91,10 @@ class Teacher_Manager(object):
             c_Id.append(c['courseId'])
         
         #生成课程编号
-        candidateId = max(c_Id) + 1 
+        if cd:
+            candidateId = max(c_Id) + 1 
+        else:
+            candidateId = 1
         self.db.Courses.insert_one({"courseName":course_name,"courseId":candidateId,"teacherId":teacherId})
         return json.dumps({"response_code":1})
 
@@ -133,7 +136,7 @@ class Teacher_Manager(object):
         lis.remove(courseName)
         self.db.Teacher.update({'teacherId':teacherId},{"$set":{'courses':lis}})
         return True
-        
+
     def checkPassword(self,teacherId,password):
         res = self.db.Teacher.find_one({'teacherId':teacherId})['password']
         if res is None:
