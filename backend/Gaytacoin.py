@@ -122,7 +122,7 @@ def student_register():
     courseId = j_data['courseId']
     timestamp = j_data['timestamp']
 
-    return student_manager.register(opnid,courseId,timestamp)
+    return student_manager.register(openid,courseId,timestamp)
 
 
 ### 老司机接口
