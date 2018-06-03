@@ -20,18 +20,34 @@ App({
             },
             method: 'POST',
             header: {
-              'content-type': 'application/x-www-form-urlencoded' // 默认值
+              'content-type': 'application/json' // 默认值
             },
             success: function (res) {
               console.log(res.data)
               that.globalData.openid=res.data.openid
-              console.log(that.globalData.openid)
-              var exist = res.data.exist
-              if(exist == 1){
+              //console.log(that.globalData.openid)
+              that.globalData.exist = res.data.exist
+              //console.log(that.globalData.exist)
+              
+              if (that.globalData.exist == 0){
                 wx.redirectTo({
-                  url: '../index/index'
+                  url: '../authorize/authorize',
+                  success:function(){
+                    console.log("??")
+                  }
                 })
               }
+              else{
+                wx.getStorage({
+                  key: 'usrinfo',
+                  success: function (res) {
+                    //console.log(res.data)
+                    that.globalData.userInfo = res.data
+                    //console.log(that.globalData.userInfo)
+                  }
+                })
+              }
+              
             }
           })
         } else {
@@ -42,6 +58,7 @@ App({
   },
   globalData: {
     userInfo: null,
-    openId: ''
+    openId: '',
+    exist:0
   }
 })

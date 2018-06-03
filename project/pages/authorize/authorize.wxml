@@ -1,5 +1,6 @@
-<form bindsubmit="formSubmit">
-<view class="input-box">
+<view class="conatiner">
+<form bindsubmit="formSubmit" >
+<view class="input-box" >
   <view class="input-row">
     <view class="input-label">姓名</view>
     <view class="input">
@@ -21,4 +22,5 @@
 <view wx:if="{{loading}}" class="load-progess" >
   <progress percent="{{percentage}}" color="pink" active active-mode="forwards"/>
   <text>正在进入</text>
+</view>
 </view>

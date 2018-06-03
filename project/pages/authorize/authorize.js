@@ -10,27 +10,37 @@ Page({
     loading:false,
     percentage:100
   },
+  onLoad:function(){
+  
+  },
   onGotUserInfo: function (e) {
     //console.log(e.detail.errMsg)
     //console.log(e.detail.userInfo)
     //console.log(e.detail.rawData)
     app.globalData.userInfo = e.detail.userInfo
     console.log(app.globalData.userInfo)
+
+    // save to storage
+    wx.setStorage({
+      key: 'usrinfo',
+      data: e.detail.userInfo,
+    })
+    
     this.setData({
       loading:true
     })
     var that = this
     setInterval(function () {
-      p=p+5
+      p = p + 5
       that.setData({
-        percentage:p
+        percentage: p
       })
     }, 40)
-    setTimeout(function(){
+    setTimeout(function () {
       wx.redirectTo({
         url: '../index/index',
       })
-    },800)
+    }, 800)
   },
   formSubmit: function(e){
     if (e.detail.value['stuName'] == '' || e.detail.value['stuId'] == ''){
@@ -56,6 +66,7 @@ Page({
         },
         success: function(res){
           console.log(res)
+          
         }
       })
     }

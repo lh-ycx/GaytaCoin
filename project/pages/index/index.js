@@ -1,6 +1,6 @@
 //index.js
 //获取应用实例
-const app = getApp()
+var app = getApp()
 
 Page({
   data: {
@@ -27,10 +27,19 @@ Page({
     })
   },
   onLoad: function () {
+    var that = this
     this.fetchData();
-    this.setData({
-      userInfo: app.globalData.userInfo
+    wx.getStorage({
+      key: 'usrinfo',
+      success: function (res) {
+        that.setData({
+          userInfo: res.data
+        })
+        //console.log(that.globalData.userInfo)
+      }
     })
+    
+    console.log(this.data.userInfo)
   },
   
   nav_changeImg: function(event){
