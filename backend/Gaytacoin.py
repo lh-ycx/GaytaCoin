@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 import hashlib
-import json
+import json,yaml
 import decimal
 import requests
 from textwrap import dedent
@@ -15,25 +15,186 @@ from wtforms import StringField,SubmitField,DecimalField
 from wtforms.validators import DataRequired
 from blockchain import MyForm, Register_Form
 
+from student import Student_Manager
+from teacher import Teacher_Manager
+from course import Course_Manager
+from flask_pymongo import PyMongo
+
 # Instantiate our Node
 app = Flask(__name__)
+mongo = PyMongo(__name__)
 
+student_manager = Student_Manager(None)
+teacher_manager = Teacher_Manager(None)
+course_manager = Course_Manager(None)
 # Generate a globally unique address for this node
 node_identifier = str(uuid4()).replace('-', '')
 
+@app.before_request
+def initial():
+    global student_manager , teacher_manager
+    db = mongo.db
+    student_manager = Student_Manager(db)
+    teacher_manager = Teacher_Manager(db)
+    course_manager = Course_Manager(db)
 # Instantiate the Blockchain
 blockchain = Blockchain()
 
-@app.route('/login', methods=['POST'])
+### 学生接口
+@app.route('/student/login', methods=['POST'])
 def get_openid():
-    code = request.form['code']
+
+    data = request.data
+    j_data = yaml.safe_load(data)
+
+    code = j_data['code']
     appid = 'wx8ae9681bcddfcdfe'
     secret = 'b871278e131917f8a793fdfb7c0ad0a9'
     wxurl = 'https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code' % (appid, secret, code)
     response = requests.get(wxurl)
     res = {}
-    res['openid'] = json.loads(response.text)['openid']
+    openid = json.loads(response.text)['openid'] 
+    res['openid'] = openid
+    exist = 0
+    if student_manager.getstuId(openid):
+        exist = 1 #学生已经注册
+    res['exist'] = exist 
     return jsonify(res)
+
+#完善信息
+@app.route('/student/complete',methods = ['POST'])
+def complete_student():
+
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+
+    openid = data['openid']
+    stuId = data['stuId']
+    stuName = data['stuName']
+
+    res = student_manager.addStudent(openid,stuId,stuName)
+    return json.dumps({'response_code':int(res)})
+
+
+#查看信息(学号和姓名)
+@app.route('/student/personalinfo',methods = ['POST'])
+def student_personal_info():
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+
+    openid = j_data['openid']
+    return student_manager.getStudentbyopenid(openid)
+
+#查看签到(返回的是签到记录列表)
+@app.route('/student/registerinfo',methods= ['POST'])
+def student_register_info():
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+
+    openid = j_data['openid']
+    return student_manager.getRegisterListbyopenid(openid)
+
+#签到(返回的是response_code)
+@app.route('/student/register',methods=['POST'])
+def student_register():
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+    
+    openid = j_data['openid']
+    courseId = j_data['courseId']
+    timestamp = j_data['timestamp']
+    begin_timestamp = j_data['begin_timestamp']
+
+    return student_manager.register(opnid,courseId,begin_timestamp,timestamp)
+
+
+### 老司机接口
+
+# 登录
+@app.route('/teacher/login',methods=['POST'])
+def teacher_login():
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+
+    teacherId = j_data['teacherId']
+    password = j_data['password']
+
+    res = teacher_manager.checkPassword(teacherId,password)
+    return json.dumps({"response_code":int(res)})
+
+#查看教师信息
+@app.route('/teacher/info',methods=['POST'])
+def teacher_info():
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+
+    teacherId = j_data['teacherId']
+    
+    return teacher_manager.getTeacherbyteacherid(teacherId)
+
+#修改密码
+@app.route('/teacher/resetPassword',methods=['POST'])
+def resetPassword():
+    data = request.data
+    j_data = yaml.safe_load(data)
+    
+    teacherId = j_data['teacherId']
+    new_password = j_data['new_password']
+    old_password = j_data['old_password']
+
+    return teacher_manager.resetPassword(teacherId,new_password,old_password)
+
+#添加课程
+@app.route('/teacher/addCourse',methods=['POST'])
+def addCourse():
+    data = request.data
+    j_data = yaml.safe_load(data)
+
+    teacherId = j_data['teacherId']
+    course_name = j_data['course_name']
+
+    return teacher_manager.addCourse(teacherId,course_name)
+
+#删除课程
+@app.route('/teacher/delCourse',methods=['POST'])
+def delCourse():
+    data = request.data
+    j_data = yaml.safe_load(data)
+
+    teacherId = j_data['teacherId']
+    courseId = j_data['courseId']
+
+    res = teacher_manager.deleteCourseById(teacherId,courseId)
+
+    return json.dumps({"response_code":int(res)})
+
+#查看课程签到记录
+@app.route('/teacher/registerList',methods=['POST'])
+def teacher_register_info():
+    data = request.data
+    j_data = yaml.safe_load(data)
+
+    courseId = j_data['courseId']
+
+    lis = teacher_manager.getRegisterListbyCourseId(courseId)
+    res = []
+    dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
+    if lis:
+        for l in lis:
+            dic["stuName"] = student_manager.getstuName(l["openid"])
+            dic["stuID"] = student_manager.getstuId(l["openid"])
+            dic["courseName"] = course_manager.getCourseName(l["courseId"])
+            dic["timestamp"] = l["timestamp"]
+            res .append(dic)
+        return json.dumps([{"response_code":1},res])
+    else:
+        return json.dumps({"response_code":0})
 
 
 @app.route('/mine', methods=['GET'])
