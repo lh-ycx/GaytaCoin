@@ -23,12 +23,12 @@ Page({
         console.log(timestamp)
         
         wx.request({
-          url: 'servername/signin/signin',
+          url: 'http://39.105.109.207:5000/student/register',
           data:{
-            openId:app.globalData.openId,
-            course: res.result,
-            start_time:res.result["timestamp"],
-            current_time:timestamp
+            openid:app.globalData.openid,
+            courseId: res.result["courseId"],
+            timestamp:timestamp,
+            begin_timestamp:res.result["timestamp"]
           },
           method:"POST",
           header:{
@@ -36,13 +36,42 @@ Page({
           },
           success:function(res){
             console.log(res.data)
-            wx.showToast({
-              title: '签到成功',
-              icon: 'success',
-              duration: 2000
-            })
+            //签到成功
+            if(res.data.response_code==1){
+              wx.showToast({
+                title: '签到成功',
+                icon: 'success',
+                duration: 2000
+              })
+            }
+            //迟到
+            else if (res.data.response_code == 0) {
+              wx.showToast({
+                title: '签到晚了哦',
+                icon: 'none',
+                duration: 2000
+              })
+            }
+            //课程不存在
+            else if (res.data.response_code == -1) {
+              wx.showToast({
+                title: '课程不存在！',
+                icon: 'none',
+                duration: 2000
+              })
+            }
+            //学生不存在
+            else if (res.data.response_code == -2) {
+              wx.showToast({
+                title: '学生不存在！',
+                icon: 'none',
+                duration: 2000
+              })
+            }
+          },
+          complete:function(){
             wx.redirectTo({
-              url: '../index/index'
+              url: '../pages/index/index'
             })
           }
         })
