@@ -12,7 +12,7 @@ class Student_Manager(object):
     def getStudentbyopenid(self,openid):
         res = self.db.Student.find_one({"openid":openid})
         if res is not None:
-            return json.dumps([{'response_code':1},res])
+            return json.dumps({'response_code':1,"stuName":res['stuName'],"stuId":res['stuId']})
         print('error: openid ',openid,' does not exist!')
         return json.dumps({'response_code':0})
     
