@@ -68,7 +68,7 @@ class Student_Manager(object):
             return res['stuName']
         return False
     
-    def register(self,openid,courseId,begin_timestamp,timestamp):
+    def register(self,openid,courseId,timestamp):
         
         #首先查找学生是否存在
         res = self.db.Student.find_one({"openid":openid})
@@ -79,10 +79,6 @@ class Student_Manager(object):
         res = self.db.Courses.find_one({"courseId":courseId})
         if res is None:
             return json.dumps({"response_code":-1})
-
-        #迟到
-        if timestamp - begin_timestamp > 900: #15min
-            return json.dumps({"response_code":0})
 
         cursor = self.db.Register.find({})
         lis = []
