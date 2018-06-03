@@ -188,7 +188,7 @@ def courseInfo():
             dic["courseId"] = course_manager.getCourseId(iter)
             dic["courseName"] = iter
             print (dic)
-            res.append(dic.copy.deepcopy())
+            res.append(copy.deepcopy(dic))
             print(res)
         result_text = [{"response_code":1},res]
         response = make_response(jsonify(result_text))
