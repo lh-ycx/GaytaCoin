@@ -1,6 +1,7 @@
 //app.js
 App({
   onLaunch: function () {
+    var that=this
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -13,7 +14,7 @@ App({
         if (res.code) {
           //发起网络请求
           wx.request({
-            url: 'http://localhost:5000/login',
+            url: 'http://39.105.109.207:5000/student/login',
             data: {
               code: res.code
             },
@@ -23,6 +24,14 @@ App({
             },
             success: function (res) {
               console.log(res.data)
+              that.globalData.openid=res.data.openid
+              console.log(that.globalData.openid)
+              var exist = res.data.exist
+              if(exist == 1){
+                wx.redirectTo({
+                  url: '../index/index'
+                })
+              }
             }
           })
         } else {
