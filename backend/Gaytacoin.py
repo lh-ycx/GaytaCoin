@@ -109,7 +109,7 @@ def student_register_info():
             dic["stuId"] = student_manager.getstuId(l["openid"])
             dic["courseName"] = course_manager.getCourseName(l["courseId"])
             dic["timestamp"] = l["timestamp"]
-            res .append(dic)
+            res .append(copy.deepcopy(dic))
         return json.dumps([{"response_code":1},res])
     else:
         return json.dumps({"response_code":0})
@@ -125,7 +125,13 @@ def student_register():
     courseId = j_data['courseId']
     timestamp = j_data['timestamp']
 
-    return student_manager.register(openid,courseId,timestamp)
+    res = student_manager.register(openid,courseId,timestamp)
+    if res == -2:
+        return json.dumps({"response_code":-2})
+    elif res == -1:
+        return json.dumps({"response_code":-1})
+    else:
+        return json.dumps({"response_code":1})
 
 
 ### 老司机接口
@@ -144,10 +150,12 @@ def teacher_login():
     
     result_text = {"response_code":int(res)}
     response = make_response(jsonify(result_text))
-    response = json.dumps({"response_code":int(res)})
-    
-    return json.dumps({"response_code":int(res)})
-    
+    #response = json.dumps({"response_code":int(res)})
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'    
+    #return json.dumps({"response_code":int(res)})
+    return response
 
 #查看教师信息
 @app.route('/teacher/info',methods=['POST'])
@@ -158,7 +166,14 @@ def teacher_info():
 
     teacherId = j_data['teacherId']
     
-    return teacher_manager.getTeacherbyteacherid(teacherId)
+    res =  teacher_manager.getTeacherbyteacherid(teacherId)
+
+    response = make_response(res)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+    return response
 
 #修改密码
 @app.route('/teacher/resetPassword',methods=['POST'])
@@ -170,8 +185,14 @@ def resetPassword():
     new_password = j_data['new_password']
     old_password = j_data['old_password']
 
-    return teacher_manager.resetPassword(teacherId,new_password,old_password)
+    res =  teacher_manager.resetPassword(teacherId,new_password,old_password)
 
+    response =make_response(res)        
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+    return response
 
 #查看所教授的所有课程以及对应的courseId
 @app.route('/teacher/courseInfo',methods=['POST'])
@@ -209,6 +230,7 @@ def courseInfo():
 
         #return json.dumps({"response_code":0})
         return response
+    
 #添加课程
 @app.route('/teacher/addCourse',methods=['POST'])
 def addCourse():
@@ -218,7 +240,14 @@ def addCourse():
     teacherId = j_data['teacherId']
     course_name = j_data['course_name']
 
-    return teacher_manager.addCourse(teacherId,course_name)
+    res = teacher_manager.addCourse(teacherId,course_name)
+
+    response =make_response(res)        
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+    return response
 
 #删除课程
 @app.route('/teacher/delCourse',methods=['POST'])
@@ -231,7 +260,12 @@ def delCourse():
 
     res = teacher_manager.deleteCourseById(teacherId,courseId)
 
-    return json.dumps({"response_code":int(res)})
+    response =make_response(json.dumps({"response_code":int(res)}))        
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+    return response
 
 #查看课程签到记录
 @app.route('/teacher/registerList',methods=['POST'])
@@ -250,10 +284,24 @@ def teacher_register_info():
             dic["stuID"] = student_manager.getstuId(l["openid"])
             dic["courseName"] = course_manager.getCourseName(l["courseId"])
             dic["timestamp"] = l["timestamp"]
-            res .append(dic)
-        return json.dumps([{"response_code":1},res])
+            res .append(copy.deepcopy(dic))
+
+            result_text = [{"response_code":1 }, res]
+            response = make_response(json.dumps(result_text))
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+            response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+            #return json.dumps([{"response_code":1},res]) 
+            return response
     else:
-        return json.dumps({"response_code":0})
+        result_text = {"response_code":0}
+        response = make_response(jsonify(result_text))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+        response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+        #return json.dumps({"response_code":0})
+        return response
 
 
 @app.route('/mine', methods=['GET'])

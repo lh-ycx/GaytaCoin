@@ -73,12 +73,12 @@ class Student_Manager(object):
         #首先查找学生是否存在
         res = self.db.Student.find_one({"openid":openid})
         if res is None:
-            return json.dumps({"response_code":-2})
+            return -2
         
         #然后查找课程是否存在
         res = self.db.Courses.find_one({"courseId":courseId})
         if res is None:
-            return json.dumps({"response_code":-1})
+            return -1
 
         cursor = self.db.Register.find({})
         lis = []
@@ -89,4 +89,5 @@ class Student_Manager(object):
 
         self.db.Register.insert_one({"registerId":registerId,"openid":openid,"courseId":courseId,"timestamp":timestamp})
 
-        return json.dumps({"response_code":1})
+
+        return 1
