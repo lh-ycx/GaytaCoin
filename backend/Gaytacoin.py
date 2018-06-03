@@ -179,6 +179,7 @@ def courseInfo():
 
     lis = teacher_manager.getteacherCourses(teacherId)
 
+    print (lis)
     dic = {"courseName":[],"courseId":[]}
     res = []
     if lis:
@@ -186,7 +187,7 @@ def courseInfo():
             dic["courseId"] = course_manager.getCourseId(iter)
             dic["courseName"] = iter
             res.append(dic)
-        
+        print (res)
         result_text = [{"response_code":1},res]
         response = make_response(jsonify(result_text))
         response.headers['Access-Control-Allow-Origin'] = '*'
