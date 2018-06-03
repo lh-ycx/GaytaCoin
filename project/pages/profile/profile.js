@@ -8,8 +8,8 @@ Page({
    */
   data: {
     userInfo: {},
-    stuId:'',
-    stuName:''
+    stuId:'init',
+    stuName:'init'
   },
 
   /**
@@ -26,22 +26,23 @@ Page({
         //console.log(that.globalData.userInfo)
       }
     })
-    console.log(this.data.userInfo)
+    //console.log(this.data.userInfo)
     wx.request({
       url: 'http://39.105.109.207:5000/student/personalinfo',
       data: {
-        code: app.globalData.openid
+        openid: app.globalData.openid
       },
       method: 'POST',
       header: {
         'content-type': 'application/json' // 默认值
       },
       success:function(res){
-        if(res.data.reponse_code==1)
+        if(res.data.response_code == 1){
           that.setData({
             stuId:res.data.stuId,
             stuName:res.data.stuName
           })
+        }
       }
     })
   },
