@@ -102,7 +102,7 @@ def student_register_info():
     lis =  student_manager.getRegisterListbyopenid(openid)
 
     dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
-    
+    res =[]
     if lis:
         for l in lis:
             dic["stuName"] = student_manager.getstuName(l["openid"])
