@@ -17,10 +17,11 @@ class Student_Manager(object):
         return json.dumps({'response_code':0})
     
     def getRegisterListbyopenid(self,openid):
+        res = []
         cursor = self.db.Register.find({"openid":openid})
         if cursor is None:
-            return json.dumps({'response_code':0})
-        res = []
+            return res
+        
         dic = {"registerId":[],"openid":[],"courseId":[],"timestamp":[]}
         
         for c in cursor:
@@ -29,7 +30,7 @@ class Student_Manager(object):
             dic['courseId'] = c['courseId']
             dic['timestamp'] = c['timestamp'] 
             res.append(dic)
-        return json.dumps([{'response_code':1},res])
+        return res
 
     def addStudent(self,openid,stuId,stuName):
 

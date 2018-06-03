@@ -95,7 +95,21 @@ def student_register_info():
     j_data = yaml.safe_load(data)
 
     openid = j_data['openid']
-    return student_manager.getRegisterListbyopenid(openid)
+    
+    lis =  student_manager.getRegisterListbyopenid(openid)
+
+    dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
+    
+    if lis:
+        for l in lis:
+            dic["stuName"] = student_manager.getstuName(l["openid"])
+            dic["stuId"] = student_manager.getstuId(l["openid"])
+            dic["courseName"] = course_manager.getCourseName(l["courseId"])
+            dic["timestamp"] = l["timestamp"]
+            res .append(dic)
+        return json.dumps([{"response_code":1},res])
+    else:
+        return json.dumps({"response_code":0})
 
 #签到(返回的是response_code)
 @app.route('/student/register',methods=['POST'])
@@ -149,6 +163,28 @@ def resetPassword():
     old_password = j_data['old_password']
 
     return teacher_manager.resetPassword(teacherId,new_password,old_password)
+
+
+#查看所教授的所有课程以及对应的courseId
+@app.route('/teacher/courseInfo',methods=['POST'])
+def courseInfo():
+    data = request.data
+    j_data = yaml.safe_load(data)
+
+    teacherId = j_data['teacherId']
+
+    lis = teacher_manager.getteacherCourses(teacherId)
+
+    dic = {"courseName":[],"courseId":[]}
+    res = []
+    if lis:
+        for iter in lis:
+            dic["courseId"] = course_manager.getCourseId(iter)
+            dic["courseName"] = iter
+            res.append(dic)
+        return json.dumps([{"response_code":1},res]) 
+    else:
+        return json.dumps({"response_code":0})
 
 #添加课程
 @app.route('/teacher/addCourse',methods=['POST'])
