@@ -180,12 +180,13 @@ def courseInfo():
     lis = teacher_manager.getteacherCourses(teacherId)
 
     print (lis)
-    dic = {"courseName":[],"courseId":[]}
+    dic = {"courseName":'',"courseId":''}
     res = []
     if lis:
         for iter in lis:
             dic["courseId"] = course_manager.getCourseId(iter)
             dic["courseName"] = iter
+            print (dic)
             res.append(dic)
         print (res)
         result_text = [{"response_code":1},res]
