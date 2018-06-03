@@ -91,7 +91,7 @@ class Teacher_Manager(object):
             c_Id.append(c['courseId'])
         
         #生成课程编号
-        if cd:
+        if c_Id:
             candidateId = max(c_Id) + 1 
         else:
             candidateId = 1
