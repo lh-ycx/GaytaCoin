@@ -22,7 +22,7 @@ from flask_pymongo import PyMongo
 
 # Instantiate our Node
 app = Flask(__name__)
-mongo = PyMongo(__name__)
+mongo = PyMongo(app)
 
 student_manager = Student_Manager(None)
 teacher_manager = Teacher_Manager(None)
