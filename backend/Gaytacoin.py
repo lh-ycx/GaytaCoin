@@ -4,17 +4,20 @@ import hashlib
 import json,yaml
 import decimal
 import requests
+import copy
 from textwrap import dedent
 from blockchain import Blockchain
 from time import time
 from uuid import uuid4
 from urllib.parse import urlparse
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template,make_response
 from flask_cors import *
 from flask_wtf import Form
 from wtforms import StringField,SubmitField,DecimalField
 from wtforms.validators import DataRequired
 from blockchain import MyForm, Register_Form
+from datetime import datetime
+from threading import Timer
 
 from student import Student_Manager
 from teacher import Teacher_Manager
@@ -34,7 +37,7 @@ node_identifier = str(uuid4()).replace('-', '')
 
 @app.before_request
 def initial():
-    global student_manager , teacher_manager
+    global student_manager , teacher_manager,course_manager
     db = mongo.db
     student_manager = Student_Manager(db)
     teacher_manager = Teacher_Manager(db)
@@ -101,14 +104,14 @@ def student_register_info():
     lis =  student_manager.getRegisterListbyopenid(openid)
 
     dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
-    
+    res = []
     if lis:
         for l in lis:
             dic["stuName"] = student_manager.getstuName(l["openid"])
             dic["stuId"] = student_manager.getstuId(l["openid"])
             dic["courseName"] = course_manager.getCourseName(l["courseId"])
             dic["timestamp"] = l["timestamp"]
-            res .append(dic)
+            res .append(copy.deepcopy(dic))
         return json.dumps([{"response_code":1},res])
     else:
         return json.dumps({"response_code":0})
@@ -124,7 +127,13 @@ def student_register():
     courseId = j_data['courseId']
     timestamp = j_data['timestamp']
 
-    return student_manager.register(openid,courseId,timestamp)
+    res = student_manager.register(openid,courseId,timestamp)
+    if res == -2:
+        return json.dumps({"response_code":-2})
+    elif res == -1:
+        return json.dumps({"response_code":-1})
+    else:
+        return json.dumps({"response_code":1})
 
 
 ### 老司机接口
@@ -140,8 +149,13 @@ def teacher_login():
     password = j_data['password']
 
     res = teacher_manager.checkPassword(teacherId,password)
-    response = json.dumps({"response_code":int(res)})
-    response.addHeader("Access-Control-Allow-Origin", "*")
+    
+    result_text = {"response_code":int(res)}
+    response = make_response(jsonify(result_text))
+    #response = json.dumps({"response_code":int(res)})
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'    
     #return json.dumps({"response_code":int(res)})
     return response
 
@@ -154,7 +168,14 @@ def teacher_info():
 
     teacherId = j_data['teacherId']
     
-    return teacher_manager.getTeacherbyteacherid(teacherId)
+    res =  teacher_manager.getTeacherbyteacherid(teacherId)
+
+    response = make_response(res)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+    return response
 
 #修改密码
 @app.route('/teacher/resetPassword',methods=['POST'])
@@ -166,8 +187,14 @@ def resetPassword():
     new_password = j_data['new_password']
     old_password = j_data['old_password']
 
-    return teacher_manager.resetPassword(teacherId,new_password,old_password)
+    res =  teacher_manager.resetPassword(teacherId,new_password,old_password)
 
+    response =make_response(res)        
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+    return response
 
 #查看所教授的所有课程以及对应的courseId
 @app.route('/teacher/courseInfo',methods=['POST'])
@@ -179,16 +206,18 @@ def courseInfo():
 
     lis = teacher_manager.getteacherCourses(teacherId)
 
-    dic = {"courseName":[],"courseId":[]}
+    #print (lis)
+    dic = {"courseName":'',"courseId":''}
     res = []
     if lis:
         for iter in lis:
             dic["courseId"] = course_manager.getCourseId(iter)
             dic["courseName"] = iter
-            res.append(dic)
-        
-        result_text = [{"response_code":1},res]
-        response = make_response(jsonify(result_text))
+            #print (dic)
+            res.append(copy.deepcopy(dic))
+            #print(res)
+        result_text = [{"response_code":1 }, res]
+        response = make_response(json.dumps(result_text))
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
         response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
@@ -203,6 +232,7 @@ def courseInfo():
 
         #return json.dumps({"response_code":0})
         return response
+    
 #添加课程
 @app.route('/teacher/addCourse',methods=['POST'])
 def addCourse():
@@ -212,7 +242,14 @@ def addCourse():
     teacherId = j_data['teacherId']
     course_name = j_data['course_name']
 
-    return teacher_manager.addCourse(teacherId,course_name)
+    res = teacher_manager.addCourse(teacherId,course_name)
+
+    response =make_response(res)        
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+    return response
 
 #删除课程
 @app.route('/teacher/delCourse',methods=['POST'])
@@ -225,7 +262,12 @@ def delCourse():
 
     res = teacher_manager.deleteCourseById(teacherId,courseId)
 
-    return json.dumps({"response_code":int(res)})
+    response =make_response(json.dumps({"response_code":int(res)}))        
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+    response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+    return response
 
 #查看课程签到记录
 @app.route('/teacher/registerList',methods=['POST'])
@@ -244,14 +286,28 @@ def teacher_register_info():
             dic["stuID"] = student_manager.getstuId(l["openid"])
             dic["courseName"] = course_manager.getCourseName(l["courseId"])
             dic["timestamp"] = l["timestamp"]
-            res .append(dic)
-        return json.dumps([{"response_code":1},res])
+            res .append(copy.deepcopy(dic))
+
+            result_text = [{"response_code":1 }, res]
+            response = make_response(json.dumps(result_text))
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+            response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+            #return json.dumps([{"response_code":1},res]) 
+            return response
     else:
-        return json.dumps({"response_code":0})
+        result_text = {"response_code":0}
+        response = make_response(jsonify(result_text))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+        response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+        #return json.dumps({"response_code":0})
+        return response
 
 
-@app.route('/mine', methods=['GET'])
-def mine():
+#@app.route('/mine', methods=['GET'])
+def mine(inc):
     # We run the proof of work algorithm to get the next proof...
     last_block = blockchain.last_block
     last_proof = last_block['proof']
@@ -268,6 +324,7 @@ def mine():
     # Forge the new Block by adding it to the chain
     block = blockchain.new_block(proof)
 
+    '''
     response = {
         'message': "New Block Forged",
         'index': block['index'],
@@ -276,6 +333,10 @@ def mine():
         'previous_hash': block['previous_hash'],
     }
     return render_template("mine.html", response_message=response)
+    '''
+    print("A block has been mined.")
+    t = Timer(inc, mine, (inc,))
+    t.start()
 
 
 @app.route('/transactions', methods=['GET','POST'])
@@ -369,5 +430,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
     args = parser.parse_args()
     port = args.port
+
+    mine(10)
 
     app.run(host='0.0.0.0', port=port)
