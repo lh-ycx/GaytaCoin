@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import json
 import random
+import copy
 from flask_pymongo import PyMongo
 class Teacher_Manager(object):
     def __init__(self,db):
@@ -75,7 +76,11 @@ class Teacher_Manager(object):
             print("error Course ",course_name," already exists")
             return json.dumps({"response_code":0})
         #首先更新Teacher表
-        self.db.Teacher.update({'teacherId':teacherId},{"$set":{'courses': res.append(course_name)}})
+        
+        lis = copy.deepcopy(res)
+        lis.append (course_name)
+        print (lis)
+        self.db.Teacher.update({'teacherId':teacherId},{"$set":{'courses': lis}})
         
         #然后更新Courses表
         c_Id=[]
