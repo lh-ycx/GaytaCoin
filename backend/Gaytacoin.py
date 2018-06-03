@@ -188,7 +188,7 @@ def courseInfo():
             dic["courseName"] = iter
             print (dic)
             res.append(dic)
-        print (res)
+            print(res)
         result_text = [{"response_code":1},res]
         response = make_response(jsonify(result_text))
         response.headers['Access-Control-Allow-Origin'] = '*'
