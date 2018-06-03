@@ -10,6 +10,7 @@ from time import time
 from uuid import uuid4
 from urllib.parse import urlparse
 from flask import Flask, jsonify, request, render_template
+from flask_cors import *
 from flask_wtf import Form
 from wtforms import StringField,SubmitField,DecimalField
 from wtforms.validators import DataRequired
@@ -22,6 +23,7 @@ from flask_pymongo import PyMongo
 
 # Instantiate our Node
 app = Flask(__name__)
+CORS(app,resources=r'/*')
 mongo = PyMongo(app)
 
 student_manager = Student_Manager(None)
@@ -184,13 +186,21 @@ def courseInfo():
             dic["courseId"] = course_manager.getCourseId(iter)
             dic["courseName"] = iter
             res.append(dic)
-        response = json.dumps([{"response_code":1},res])
-        response.addHeader("Access-Control-Allow-Origin", "*")
+        
+        result_text = [{"response_code":1},res]
+        response = make_response(jsonify(result_text))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+        response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
         #return json.dumps([{"response_code":1},res]) 
         return response
     else:
-        response = json.dumps({"response_code":0})
-        response.addHeader("Access-Control-Allow-Origin", "*")
+        result_text = {"response_code":0}
+        response = make_response(jsonify(result_text))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+        response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
         #return json.dumps({"response_code":0})
         return response
 #添加课程
