@@ -20,15 +20,16 @@ Page({
         //content: res.result
         //var course=res.result;
         var cur_timestamp = Date.parse(new Date()); 
+        cur_timestamp = cur_timestamp/1000;
         console.log(res.result)
         var res_json=JSON.parse(res.result)
-        if(res_json["timestamp"] >= cur_timestamp/1000){
+        if(res_json["timestamp"] >= cur_timestamp){
           wx.request({
             url: 'http://39.105.109.207:5000/student/register',
             data:{
               openid:app.globalData.openid,
               courseId: res_json["courseId"],
-              timestamp:res_json["timestamp"]
+              timestamp:cur_timestamp
             },
             method:"POST",
             header:{
