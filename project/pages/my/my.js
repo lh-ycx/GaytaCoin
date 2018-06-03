@@ -16,9 +16,27 @@ Page({
   },
 
   fetchData: function () {
+    var that = this
     /*
     get data from server
     */
+    wx.request({
+      url: 'http://39.105.109.207:5000/student/registerinfo',
+      data: {
+        openid: app.globalData.openid,
+      },
+      method: "POST",
+      header: {
+        'content-type': 'application/json'
+      },
+      success:function(res){
+        if(res.data.respose_code==1){
+          that.setData({
+            signinlist:res.data[1]
+          })
+        }
+      }
+    })
     this.setData({
       signinlist: [
         {
@@ -72,5 +90,6 @@ Page({
         }
       ]
     })
+
   }
 })

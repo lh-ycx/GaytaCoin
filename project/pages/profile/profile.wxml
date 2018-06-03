@@ -2,16 +2,12 @@
 <view class="container">
   <view class="userinfo">
     <block>
-      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover" bindtap="showStuInfo"></image>
+      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
       <image wx:if="{{userInfo.gender}}" src="../../images/male.png" class="userinfo-gender"></image>
       <image wx:else src="../../images/female.png" class="userinfo-gender"></image>
     </block>
+    <text class="userinfo-stuinfo">{{stuId}}</text>
+    <text class="userinfo-stuinfo">{{stuName}}</text>
   </view>
-  <view class="index-menu">
-		<view class="index-menu-item" wx:for="{{indexmenu}}" wx:key="{{item.id}}">
-			<image id='{{item.id}}' bindtap='nav_changeImg' src="{{item.icon}}"></image>
-			<text>{{item.text}}</text>
-		</view>
-	</view>
 </view>

@@ -85,5 +85,10 @@ Page({
   },
   onHide: function(){
     this.fetchData()
+  },
+  showStuInfo:function(){
+    wx.navigateTo({
+      url: '../profile/profile'
+    })
   }
 })

@@ -2,9 +2,9 @@
   "pages": [
     "pages/index/index",
     "pages/authorize/authorize",
-    
     "pages/scan/scan",
-    "pages/my/my"
+    "pages/my/my",
+    "pages/profile/profile"
   ],
   "window": {
     "backgroundTextStyle": "light",

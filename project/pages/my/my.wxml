@@ -5,9 +5,9 @@
         <image src="{{item.iconurl}}" mode="aspectFill"></image>
       </view>
       <view class="my-signin-text">
-        <view class="my-signin-title">{{item.course}}</view>
-        <text>时间：{{item.time}}</text>
-        <text>签到者：{{item.student}}</text>
+        <view class="my-signin-title">{{item.courseName}}</view>
+        <text>时间：{{item.timestamp}}</text>
+        <text>签到者：{{item.stuName}}</text>
       </view>
     </view>
   </view>
