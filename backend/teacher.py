@@ -72,7 +72,9 @@ class Teacher_Manager(object):
         if res is None:
             print("error: teacher", teacherId," does not exist!")
             return json.dumps({"response_code":-1})
-        if course_name in res:
+
+        ll = self.db.Courses.find_one({'courseName':course_name})
+        if ll is not None:
             print("error Course ",course_name," already exists")
             return json.dumps({"response_code":0})
         #首先更新Teacher表
@@ -102,6 +104,7 @@ class Teacher_Manager(object):
             print("error: course ",course_name," does not exist!")
             return False
         
+
         #首先更新Teacher表
         self.db.Teacher.update({'teacherId':teacherId},{"$set":{'courses':res.remove(course_name)}})
         
@@ -125,12 +128,12 @@ class Teacher_Manager(object):
         if res is None:
             print("error: teacher", teacherId," does not exist!")
             return False
-        if courseName not in res:
-            print("error: course ",courseName," does not exist!")
-            return False
 
-        self.db.Teacher.update({'teacherId':teacherId},{"$set":{'courses':res.remove(courseName)}})
+        lis = copy.deepcopy(res)
+        lis.remove(courseName)
+        self.db.Teacher.update({'teacherId':teacherId},{"$set":{'courses':lis}})
         return True
+        
     def checkPassword(self,teacherId,password):
         res = self.db.Teacher.find_one({'teacherId':teacherId})['password']
         if res is None:
