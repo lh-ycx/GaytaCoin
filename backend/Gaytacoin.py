@@ -141,10 +141,13 @@ def teacher_login():
     password = j_data['password']
 
     res = teacher_manager.checkPassword(teacherId,password)
+    
+    result_text = {"response_code":int(res)}
+    response = make_response(jsonify(result_text))
     response = json.dumps({"response_code":int(res)})
-    response.addHeader("Access-Control-Allow-Origin", "*")
-    #return json.dumps({"response_code":int(res)})
-    return response
+    
+    return json.dumps({"response_code":int(res)})
+    
 
 #查看教师信息
 @app.route('/teacher/info',methods=['POST'])
@@ -187,10 +190,10 @@ def courseInfo():
         for iter in lis:
             dic["courseId"] = course_manager.getCourseId(iter)
             dic["courseName"] = iter
-            print (dic)
+            #print (dic)
             res.append(copy.deepcopy(dic))
-            print(res)
-        result_text = [{"response_code":1},res]
+            #print(res)
+        result_text = {"response_code":1,res}
         response = make_response(jsonify(result_text))
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
