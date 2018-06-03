@@ -81,7 +81,7 @@ class Teacher_Manager(object):
         c_Id=[]
         cursor = self.db.Courses.find({})
         for c in cursor:
-            c_Id = c_Id.append(c['courseId'])
+            c_Id.append(c['courseId'])
         
         #生成课程编号
         candidateId = max(c_Id) + 1 
