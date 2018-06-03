@@ -10,6 +10,7 @@ from time import time
 from uuid import uuid4
 from urllib.parse import urlparse
 from flask import Flask, jsonify, request, render_template
+from flask_cors import *
 from flask_wtf import Form
 from wtforms import StringField,SubmitField,DecimalField
 from wtforms.validators import DataRequired
@@ -22,6 +23,7 @@ from flask_pymongo import PyMongo
 
 # Instantiate our Node
 app = Flask(__name__)
+CORS(app,resources=r'/*')
 mongo = PyMongo(app)
 
 student_manager = Student_Manager(None)
@@ -95,7 +97,21 @@ def student_register_info():
     j_data = yaml.safe_load(data)
 
     openid = j_data['openid']
-    return student_manager.getRegisterListbyopenid(openid)
+    
+    lis =  student_manager.getRegisterListbyopenid(openid)
+
+    dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
+    
+    if lis:
+        for l in lis:
+            dic["stuName"] = student_manager.getstuName(l["openid"])
+            dic["stuId"] = student_manager.getstuId(l["openid"])
+            dic["courseName"] = course_manager.getCourseName(l["courseId"])
+            dic["timestamp"] = l["timestamp"]
+            res .append(dic)
+        return json.dumps([{"response_code":1},res])
+    else:
+        return json.dumps({"response_code":0})
 
 #签到(返回的是response_code)
 @app.route('/student/register',methods=['POST'])
@@ -107,9 +123,8 @@ def student_register():
     openid = j_data['openid']
     courseId = j_data['courseId']
     timestamp = j_data['timestamp']
-    begin_timestamp = j_data['begin_timestamp']
 
-    return student_manager.register(opnid,courseId,begin_timestamp,timestamp)
+    return student_manager.register(openid,courseId,timestamp)
 
 
 ### 老司机接口
@@ -125,7 +140,10 @@ def teacher_login():
     password = j_data['password']
 
     res = teacher_manager.checkPassword(teacherId,password)
-    return json.dumps({"response_code":int(res)})
+    response = json.dumps({"response_code":int(res)})
+    response.addHeader("Access-Control-Allow-Origin", "*")
+    #return json.dumps({"response_code":int(res)})
+    return response
 
 #查看教师信息
 @app.route('/teacher/info',methods=['POST'])
@@ -150,6 +168,41 @@ def resetPassword():
 
     return teacher_manager.resetPassword(teacherId,new_password,old_password)
 
+
+#查看所教授的所有课程以及对应的courseId
+@app.route('/teacher/courseInfo',methods=['POST'])
+def courseInfo():
+    data = request.data
+    j_data = yaml.safe_load(data)
+
+    teacherId = j_data['teacherId']
+
+    lis = teacher_manager.getteacherCourses(teacherId)
+
+    dic = {"courseName":[],"courseId":[]}
+    res = []
+    if lis:
+        for iter in lis:
+            dic["courseId"] = course_manager.getCourseId(iter)
+            dic["courseName"] = iter
+            res.append(dic)
+        
+        result_text = [{"response_code":1},res]
+        response = make_response(jsonify(result_text))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+        response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+        #return json.dumps([{"response_code":1},res]) 
+        return response
+    else:
+        result_text = {"response_code":0}
+        response = make_response(jsonify(result_text))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+        response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+        #return json.dumps({"response_code":0})
+        return response
 #添加课程
 @app.route('/teacher/addCourse',methods=['POST'])
 def addCourse():

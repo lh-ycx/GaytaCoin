@@ -9,3 +9,9 @@ class Course_Manager(object):
         if res is None:
             return False
         return res
+    
+    def getCourseId(self,courseName):
+        res = self.db.Courses.find_one({"courseName":courseName})['courseId']
+        if res is  None:
+            return False
+        return res

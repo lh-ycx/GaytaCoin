@@ -12,15 +12,16 @@ class Student_Manager(object):
     def getStudentbyopenid(self,openid):
         res = self.db.Student.find_one({"openid":openid})
         if res is not None:
-            return json.dumps([{'response_code':1},res])
+            return json.dumps({'response_code':1,"stuName":res['stuName'],"stuId":res['stuId']})
         print('error: openid ',openid,' does not exist!')
         return json.dumps({'response_code':0})
     
     def getRegisterListbyopenid(self,openid):
+        res = []
         cursor = self.db.Register.find({"openid":openid})
         if cursor is None:
-            return json.dumps({'response_code':0})
-        res = []
+            return res
+        
         dic = {"registerId":[],"openid":[],"courseId":[],"timestamp":[]}
         
         for c in cursor:
@@ -29,7 +30,7 @@ class Student_Manager(object):
             dic['courseId'] = c['courseId']
             dic['timestamp'] = c['timestamp'] 
             res.append(dic)
-        return json.dumps([{'response_code':1},res])
+        return res
 
     def addStudent(self,openid,stuId,stuName):
 
@@ -67,7 +68,7 @@ class Student_Manager(object):
             return res['stuName']
         return False
     
-    def register(self,openid,courseId,begin_timestamp,timestamp):
+    def register(self,openid,courseId,timestamp):
         
         #首先查找学生是否存在
         res = self.db.Student.find_one({"openid":openid})
@@ -78,10 +79,6 @@ class Student_Manager(object):
         res = self.db.Courses.find_one({"courseId":courseId})
         if res is None:
             return json.dumps({"response_code":-1})
-
-        #迟到
-        if timestamp - begin_timestamp > 900: #15min
-            return json.dumps({"response_code":0})
 
         cursor = self.db.Register.find({})
         lis = []
