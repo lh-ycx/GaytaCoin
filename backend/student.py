@@ -85,9 +85,9 @@ class Student_Manager(object):
         for c in cursor:
             lis.append (c['registerId'])
 
-        registerId = max(lis) + 1
-
+        if lis:
+            registerId = max(lis) + 1
+        else:
+            registerId = 1
         self.db.Register.insert_one({"registerId":registerId,"openid":openid,"courseId":courseId,"timestamp":timestamp})
-
-
         return 1

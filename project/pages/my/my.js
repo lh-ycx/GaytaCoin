@@ -32,11 +32,27 @@ Page({
         'content-type': 'application/json'
       },
       success:function(res){
-        if(res.data.respose_code==1){
+        console.log(res.data)
+        if(res.data[0]["response_code"] == 1){
+          for(var i=0;i<res.data[1].length;i++){
+            var date = new Date(res.data[1][i]["timestamp"]*1000);
+            var Y = date.getFullYear();
+            //月  
+            var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+            //日  
+            var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+            //时  
+            var h = date.getHours();
+            //分  
+            var m = date.getMinutes();
+            date = Y + "." + M + "." + D + " " + h + ":" + m;
+            res.data[1][i]["date"]=date;  
+          }
           that.setData({
             signinlist:res.data[1]
           })
         }
+       
       }
     })
     /*

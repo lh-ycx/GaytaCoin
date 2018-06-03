@@ -16,6 +16,9 @@ from flask_wtf import Form
 from wtforms import StringField,SubmitField,DecimalField
 from wtforms.validators import DataRequired
 from blockchain import MyForm, Register_Form
+from datetime import datetime
+from threading import Timer
+import sched
 
 from student import Student_Manager
 from teacher import Teacher_Manager
@@ -26,6 +29,8 @@ from flask_pymongo import PyMongo
 app = Flask(__name__)
 CORS(app,resources=r'/*')
 mongo = PyMongo(app)
+
+active_teachers = []
 
 student_manager = Student_Manager(None)
 teacher_manager = Teacher_Manager(None)
@@ -44,6 +49,8 @@ def initial():
 blockchain = Blockchain()
 
 ### 学生接口
+
+
 @app.route('/student/login', methods=['POST'])
 def get_openid():
 
@@ -134,11 +141,12 @@ def student_register():
         return json.dumps({"response_code":1})
 
 
-### 老司机接口
+### 教师接口
 
 # 登录
 @app.route('/teacher/login',methods=['POST'])
 def teacher_login():
+    global active_teachers
     data = request.data
 
     j_data = yaml.safe_load(data)
@@ -147,6 +155,12 @@ def teacher_login():
     password = j_data['password']
 
     res = teacher_manager.checkPassword(teacherId,password)
+
+    if(res):
+        active_teachers.append(teacherId)
+        s = sched.scheduler(time.time, time.sleep)
+        s.enter(600, 1, teacher_logout, (teacherId))
+        s.run()
     
     result_text = {"response_code":int(res)}
     response = make_response(jsonify(result_text))
@@ -156,6 +170,53 @@ def teacher_login():
     response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'    
     #return json.dumps({"response_code":int(res)})
     return response
+
+# 登出
+@app.route('/teacher/logout',methods=['POST'])
+def teacher_logout(*teacherId):
+    global active_teachers
+
+    if(teacherId):
+        try:
+            active_teachers.remove(teacherId[0])
+        except:
+            result_text = {"response_code":0}
+            response = make_response(jsonify(result_text))
+            return response
+        else:
+            result_text = {"response_code":1}
+            response = make_response(jsonify(result_text))
+            return response
+
+    else:
+        data = request.data
+        j_data = yaml.safe_load(data)
+        teacherID = j_data['teacherId']
+        try:
+            active_teachers.remove(teacherID)
+        except:
+            result_text = {"response_code":0}
+            response = make_response(jsonify(result_text))
+            return response
+        else:
+            result_text = {"response_code":1}
+            response = make_response(jsonify(result_text))
+            return response
+
+# 查询教师是否已登录
+@app.route('/teacher/ifreg',methods=['POST'])
+def if_reg():
+    data = request.data
+    j_data = yaml.safe_load(data)
+    teacherId = j_data['teacherId']
+    if teacherId in active_teachers:
+        result_text = {"response_code":1}
+        response = make_response(jsonify(result_text))
+        return response
+    else:
+        result_text = {"response_code":0}
+        response = make_response(jsonify(result_text))
+        return response
 
 #查看教师信息
 @app.route('/teacher/info',methods=['POST'])
@@ -304,8 +365,8 @@ def teacher_register_info():
         return response
 
 
-@app.route('/mine', methods=['GET'])
-def mine():
+#@app.route('/mine', methods=['GET'])
+def mine(inc):
     # We run the proof of work algorithm to get the next proof...
     last_block = blockchain.last_block
     last_proof = last_block['proof']
@@ -322,6 +383,7 @@ def mine():
     # Forge the new Block by adding it to the chain
     block = blockchain.new_block(proof)
 
+    '''
     response = {
         'message': "New Block Forged",
         'index': block['index'],
@@ -330,6 +392,10 @@ def mine():
         'previous_hash': block['previous_hash'],
     }
     return render_template("mine.html", response_message=response)
+    '''
+    print("A block has been mined.")
+    t = Timer(inc, mine, (inc,))
+    t.start()
 
 
 @app.route('/transactions', methods=['GET','POST'])
@@ -423,5 +489,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
     args = parser.parse_args()
     port = args.port
+
+    mine(10)
 
     app.run(host='0.0.0.0', port=port)
