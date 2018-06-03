@@ -69,9 +69,9 @@ def complete_student():
 
     j_data = yaml.safe_load(data)
 
-    openid = data['openid']
-    stuId = data['stuId']
-    stuName = data['stuName']
+    openid = j_data['openid']
+    stuId = j_data['stuId']
+    stuName = j_data['stuName']
 
     res = student_manager.addStudent(openid,stuId,stuName)
     return json.dumps({'response_code':int(res)})
