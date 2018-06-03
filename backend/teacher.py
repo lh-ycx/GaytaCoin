@@ -75,7 +75,7 @@ class Teacher_Manager(object):
             print("error Course ",course_name," already exists")
             return json.dumps({"response_code":0})
         #首先更新Teacher表
-        self.db.Teacher.update({'teacherId':teacherId},{"$set":{'courses': res + course_name}})
+        self.db.Teacher.update({'teacherId':teacherId},{"$set":{'courses': res.append(course_name)}})
         
         #然后更新Courses表
         c_Id=[]
