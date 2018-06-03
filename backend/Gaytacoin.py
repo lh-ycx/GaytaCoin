@@ -138,7 +138,10 @@ def teacher_login():
     password = j_data['password']
 
     res = teacher_manager.checkPassword(teacherId,password)
-    return json.dumps({"response_code":int(res)})
+    response = json.dumps({"response_code":int(res)})
+    response.addHeader("Access-Control-Allow-Origin", "*")
+    #return json.dumps({"response_code":int(res)})
+    return response
 
 #查看教师信息
 @app.route('/teacher/info',methods=['POST'])
@@ -181,10 +184,15 @@ def courseInfo():
             dic["courseId"] = course_manager.getCourseId(iter)
             dic["courseName"] = iter
             res.append(dic)
-        return json.dumps([{"response_code":1},res]) 
+        response = json.dumps([{"response_code":1},res])
+        response.addHeader("Access-Control-Allow-Origin", "*")
+        #return json.dumps([{"response_code":1},res]) 
+        return response
     else:
-        return json.dumps({"response_code":0})
-
+        response = json.dumps({"response_code":0})
+        response.addHeader("Access-Control-Allow-Origin", "*")
+        #return json.dumps({"response_code":0})
+        return response
 #添加课程
 @app.route('/teacher/addCourse',methods=['POST'])
 def addCourse():
