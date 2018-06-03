@@ -203,6 +203,21 @@ def teacher_logout(*teacherId):
             response = make_response(jsonify(result_text))
             return response
 
+# 查询教师是否已登录
+@app.route('/teacher/ifreg',methods=['POST'])
+def if_reg():
+    data = request.data
+    j_data = yaml.safe_load(data)
+    teacherId = j_data['teacherId']
+    if teacherId in active_teachers:
+        result_text = {"response_code":1}
+        response = make_response(jsonify(result_text))
+        return response
+    else:
+        result_text = {"response_code":0}
+        response = make_response(jsonify(result_text))
+        return response
+
 #查看教师信息
 @app.route('/teacher/info',methods=['POST'])
 def teacher_info():
