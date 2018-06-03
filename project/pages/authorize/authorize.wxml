@@ -1,6 +1,23 @@
-<view wx:if="{{!loading}}" class="button-box">
-  <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" hover-class='button-hover'>授权开启block签</button>
+<form bindsubmit="formSubmit">
+<view class="input-box">
+  <view class="input-row">
+    <view class="input-label">姓名</view>
+    <view class="input">
+      <input name="stuName" type="text" placeholder="请输入姓名"></input>
+    </view>
+  </view>
+  <view class="input-row">
+    <view class="input-label">学号</view>
+    <view class="input">
+      <input name="stuId" type="text" placeholder="请输入学号"></input>
+    </view>
+  </view>
 </view>
+<view wx:if="{{!loading}}" class="button-box">
+  <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" hover-class='button-hover' form-type='submit'>授权开启block签</button>
+</view>
+</form>
+
 <view wx:if="{{loading}}" class="load-progess" >
   <progress percent="{{percentage}}" color="pink" active active-mode="forwards"/>
   <text>正在进入</text>
