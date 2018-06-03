@@ -16,6 +16,8 @@ from flask_wtf import Form
 from wtforms import StringField,SubmitField,DecimalField
 from wtforms.validators import DataRequired
 from blockchain import MyForm, Register_Form
+from datetime import datetime
+from threading import Timer
 
 from student import Student_Manager
 from teacher import Teacher_Manager
@@ -102,7 +104,7 @@ def student_register_info():
     lis =  student_manager.getRegisterListbyopenid(openid)
 
     dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
-    res =[]
+    
     if lis:
         for l in lis:
             dic["stuName"] = student_manager.getstuName(l["openid"])
@@ -304,8 +306,8 @@ def teacher_register_info():
         return response
 
 
-@app.route('/mine', methods=['GET'])
-def mine():
+#@app.route('/mine', methods=['GET'])
+def mine(inc):
     # We run the proof of work algorithm to get the next proof...
     last_block = blockchain.last_block
     last_proof = last_block['proof']
@@ -322,6 +324,7 @@ def mine():
     # Forge the new Block by adding it to the chain
     block = blockchain.new_block(proof)
 
+    '''
     response = {
         'message': "New Block Forged",
         'index': block['index'],
@@ -330,6 +333,10 @@ def mine():
         'previous_hash': block['previous_hash'],
     }
     return render_template("mine.html", response_message=response)
+    '''
+    print("A block has been mined.")
+    t = Timer(inc, mine, (inc,))
+    t.start()
 
 
 @app.route('/transactions', methods=['GET','POST'])
@@ -423,5 +430,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--port', default=5000, type=int, help='port to listen on')
     args = parser.parse_args()
     port = args.port
+
+    mine(10)
 
     app.run(host='0.0.0.0', port=port)
