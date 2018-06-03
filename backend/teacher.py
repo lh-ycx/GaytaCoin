@@ -12,7 +12,7 @@ class Teacher_Manager(object):
     def getTeacherbyteacherid(self,teacherId):
         res = self.db.Teacher.find_one({"teacherId":teacherId})
         if res is not None:
-            return json.dumps([{'response_code':1},res])
+            return json.dumps({'response_code':1,"teacherId":res["teacherId"],"teacherName":res["teacherName"],"courses":res["courses"]})
         print('error: teacherId ',teacherId,' does not exist!')
         return json.dumps({'response_code':0})
     
