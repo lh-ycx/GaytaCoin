@@ -1,4 +1,6 @@
 // pages/my/my.js
+var app=getApp()
+
 Page({
 
   /**
@@ -37,6 +39,7 @@ Page({
         }
       }
     })
+    /*
     this.setData({
       signinlist: [
         {
@@ -90,6 +93,6 @@ Page({
         }
       ]
     })
-
+*/
   }
 })

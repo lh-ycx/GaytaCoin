@@ -4,6 +4,7 @@ var app = getApp()
 
 Page({
   data: {
+    hasUserInfo:false,
     userInfo:{},
     indexmenu: [],
   },
@@ -27,19 +28,21 @@ Page({
     })
   },
   onLoad: function () {
+    
     var that = this
     this.fetchData();
     wx.getStorage({
       key: 'usrinfo',
       success: function (res) {
         that.setData({
-          userInfo: res.data
+          userInfo: res.data,
+          hasUserInfo:true
         })
         //console.log(that.globalData.userInfo)
       }
     })
     
-    console.log(this.data.userInfo)
+    //console.log(this.data.userInfo)
   },
   
   nav_changeImg: function(event){
@@ -89,6 +92,19 @@ Page({
   showStuInfo:function(){
     wx.navigateTo({
       url: '../profile/profile'
+    })
+  },
+  onGotUserInfo: function (e) {
+    app.globalData.userInfo = e.detail.userInfo
+    console.log(app.globalData.userInfo)
+    // save to storage
+    wx.setStorage({
+      key: 'usrinfo',
+      data: e.detail.userInfo,
+    })
+    this.setData({
+      userInfo: e.detail.userInfo,
+      hasUserInfo:true
     })
   }
 })

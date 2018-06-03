@@ -32,9 +32,6 @@ App({
               if (that.globalData.exist == 0){
                 wx.redirectTo({
                   url: '../authorize/authorize',
-                  success:function(){
-                    console.log("??")
-                  }
                 })
               }
               else{

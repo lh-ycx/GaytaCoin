@@ -7,7 +7,7 @@
       <image wx:if="{{userInfo.gender}}" src="../../images/male.png" class="userinfo-gender"></image>
       <image wx:else src="../../images/female.png" class="userinfo-gender"></image>
     </block>
-    <text class="userinfo-stuinfo">{{stuId}}</text>
-    <text class="userinfo-stuinfo">{{stuName}}</text>
+    <text class="userinfo-stuinfo">学号：{{stuId}}</text>
+    <text class="userinfo-stuinfo">姓名：{{stuName}}</text>
   </view>
 </view>

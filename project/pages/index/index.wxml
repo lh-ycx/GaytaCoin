@@ -1,11 +1,14 @@
 <!--index.wxml-->
 <view class="container">
   <view class="userinfo">
+    <view wx:if="{{!hasUserInfo}}" class="button-box">
+    <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" hover-class='button-hover'>怎么没头像？？</button>
+    </view>
     <block>
       <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover" bindtap="showStuInfo"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      <image wx:if="{{userInfo.gender}}" src="../../images/male.png" class="userinfo-gender"></image>
-      <image wx:else src="../../images/female.png" class="userinfo-gender"></image>
+      <image wx:if="{{userInfo.gender&&hasUserInfo}}" src="../../images/male.png" class="userinfo-gender"></image>
+      <image wx:if="{{!userInfo.gender&&hasUserInfo}}" src="../../images/female.png" class="userinfo-gender"></image>
     </block>
   </view>
   <view class="index-menu">
