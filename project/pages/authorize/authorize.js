@@ -26,23 +26,10 @@ Page({
       data: e.detail.userInfo,
     })
     
-    this.setData({
-      loading:true
-    })
-    var that = this
-    setInterval(function () {
-      p = p + 5
-      that.setData({
-        percentage: p
-      })
-    }, 40)
-    setTimeout(function () {
-      wx.redirectTo({
-        url: '../index/index',
-      })
-    }, 800)
+    
   },
   formSubmit: function(e){
+    var that = this
     if (e.detail.value['stuName'] == '' || e.detail.value['stuId'] == ''){
       wx.showToast({
         title: '请输入姓名和学号',
@@ -66,7 +53,21 @@ Page({
         },
         success: function(res){
           console.log(res)
+          that.setData({
+            loading: true
+          })
           
+          setInterval(function () {
+            p = p + 5
+            that.setData({
+              percentage: p
+            })
+          }, 40)
+          setTimeout(function () {
+            wx.redirectTo({
+              url: '../index/index',
+            })
+          }, 800)
         }
       })
     }
