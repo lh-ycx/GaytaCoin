@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <title>Bloch签-教师版</title>
+    <style>
+        .left_ul {
+            width: 200px;
+        }
+
+        nav {
+            display: block;
+        }
+
+        .nav-stacked {
+            width: 200px;
+            margin-right: 0;
+            float: left;
+        }
+
+        .wraper {
+            /*background-color: aqua;*/
+            float: left;
+            margin-left: 50px;
+            width: 1200px;
+            height: 650px;
+        }
+
+        .form-control {
+            width: 200px;
+            display: block;
+            float: left;
+        }
+
+        .dropdown {
+            display: block;
+            float: left;
+        }
+
+        .fl {
+            float: left;
+        }
+
+        .config {
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 20px;
+            height: 40px;
+            /*background-color: blue;*/
+        }
+
+        .form_datetime {
+            margin-left: 100px;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="../js/locales/bootstrap-datetimepicker.fr.js"></script>
+    <script type="text/javascript" src="../js/bootstrap-datetimepicker.js"></script>
+
+    <script>
+        $.ajax({
+            type:'POST',
+            url:'http://39.105.109.207:5000/teacher/courseInfo',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({teacherId:"1500012863"}),
+            success: function(res) {
+                console.log(res);
+                if (res[0]['response_code'] != 1) {
+                    alert('获取教师信息错误！');
+                    console.log(res['response_code']);
+                }
+                var courses = res[1];
+                //console.log(courses);
+                for(var i = 0; i < courses.length; i++) {
+                    //console.log(i);
+                    //console.log(courses[i]['courseName']);
+                    //console.log(courses[i]['courseId']);
+                    $('#cs').append("<li><a href=\"#\" value=\""+courses[i]['courseId']+"\">"+courses[i]['courseName']+"</a></li>");
+                }
+            }
+        })
+    </script>
+
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Block签</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#">
+                        <span class="glyphicon glyphicon-user"></span> XX老师</a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="glyphicon glyphicon-log-in"></span> 退出登录</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <nav class="nav nav-pills nav-stacked" role="navigation">
+        <ul class="nav nav-pills nav-stacked left_ul">
+            <li role="presentation" class="active">
+                <a href="#">
+                    <span class="glyphicon glyphicon-pencil"></span>&nbsp&nbsp设置签到</a>
+            </li>
+            <li role="presentation">
+                <a href="mycourse.html">
+                    <span class="glyphicon glyphicon-book"></span>&nbsp&nbsp我的课程</a>
+            </li>
+            <li role="presentation">
+
+                <a href="table.html">
+                    <span class="glyphicon glyphicon-sunglasses"></span>&nbsp&nbsp查看签到</a>
+            </li>
+            <li role="presentation">
+                <a href="#">
+                    <span class="glyphicon glyphicon-lock"></span>&nbsp&nbsp修改密码</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="wraper">
+        <div class="config">
+            <div class="dropdown">
+                <span style="font-size: 18px">签到课程：</span>
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="true" style="width: 100px;">
+                    请选择课程
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id = "cs">
+                    <!--<li>
+                        <a href="#" class="course" id="c1" value="">???</a>
+                    </li>
+                    <li>
+                        <a href="#" class="course" id="c2" value="">1</a>
+                    </li>
+                    <li>
+                        <a href="#" class="course" id="c3" value=""></a>
+                    </li>
+                    <li>
+                        <a href="#" class="course" id="c4" value=""></a>
+                    </li>-->
+                </ul>
+            </div>
+
+            <div class="input-append date form_datetime fl" style="width: 400px; margin-right: 0">
+                <div class="fl">
+                    <span style="font-size: 18px;">截止时间：</span>
+                </div>
+                <input size="16" type="text" value="" readonly class="form-control" id="ddl">
+                <span class="input-group-btn add-on" style="width: 40px;">
+                    <button class="btn btn-default" type="button">
+                        <i class="icon-th glyphicon glyphicon-calendar"></i>
+                    </button>
+                </span>
+            </div>
+
+            <script type="text/javascript">
+
+            </script>
+
+            <div class="fl">
+                <button type="button" class="btn btn-default" id="qrbtn">生成二维码</button>
+            </div>
+        </div>
+        <div id="qrcode" style="margin-top: 50px;"></div>
+        <script>
+            var cur_coursename  //当前课程名
+            var ddl             //签到截止时间
+            var cur_courseid    //当前课程id
+            //时间选择
+            $(".form_datetime").datetimepicker({
+                format: "yyyy-mm-dd hh:ii",
+                autoclose: true,
+                todayBtn: true,
+            }).on('changeDate', function (e) {
+                console.log('截止日期更改了！');
+                ddl = $('#ddl').val();
+                console.log(ddl)
+            })
+            //课程选择
+            $("#cs").click(function (e) {
+                console.log("get here");
+                cur_coursename = $(e.target).html();
+                cur_courseid = $(e.target).attr("value");
+                console.log('选择了课程名：' + cur_coursename)
+                console.log('选择了课程号：' + cur_courseid)
+                $("#dropdownMenu1").html(cur_coursename + "<span class='caret'></span>");
+            });
+            //生成二维码
+            $("#qrbtn").click(function () {
+                $('#qrcode canvas').remove();
+                console.log('课程号：' + cur_courseid);
+                console.log('课程名：' + cur_coursename);
+                console.log('截止时间：' + ddl);
+                var timestamp = Date.parse(new Date(ddl));
+                timestamp = timestamp / 1000;
+                console.log("截止时间戳为："+timestamp)
+                if (cur_courseid && cur_coursename && ddl) {
+                    $('#qrcode').qrcode({
+                        render: "canvas", //table方式
+                        width: 300, //宽度
+                        height: 300, //高度
+                        text: '{\"courseId\":'+cur_courseid +",\"timestamp\":"+ timestamp+'}'//任意内容
+                    });
+                }
+                else {
+                    alert("设置不完整，请先设置！");
+                }
+            })
+        </script>
+    </div>
+
+
+</body>
+
+</html>
