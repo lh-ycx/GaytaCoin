@@ -110,6 +110,7 @@ def student_register_info():
 
     dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
     
+    res = []
     if lis:
         for l in lis:
             dic["stuName"] = student_manager.getstuName(l["openid"])
@@ -119,7 +120,7 @@ def student_register_info():
             res .append(copy.deepcopy(dic))
         return json.dumps([{"response_code":1},res])
     else:
-        return json.dumps({"response_code":0})
+        return json.dumps([{"response_code":0}])
 
 #签到(返回的是response_code)
 @app.route('/student/register',methods=['POST'])
@@ -490,6 +491,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     port = args.port
 
-    mine(10)
+    #mine(10)
 
     app.run(host='0.0.0.0', port=port)
