@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="../js/jquery-1.8.3.min.js"></script>
+        <script type="text/javascript" src="../js/bootstrap-table.js"></script>
+        <script src="../js/bootstrap.js"></script>
+        <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/bootstrap-table.css">
+        <title>Bloch签-教师版</title>
+
+        <style>
+      .left_ul {
+            width: 200px;
+        }
+
+        nav {
+            display: block;
+        }
+
+        .nav-stacked {
+            width: 200px;
+            margin-right: 0;
+            float: left;
+        }
+
+        .wraper {
+            /*background-color: aqua;*/
+            float: left;
+            margin-left: 50px;
+            width: 80%;
+            min-width: 500px;
+            height: auto;
+        }
+
+        .form-control {
+            width: 200px;
+            display: block;
+            float: left;
+        }
+        
+        #data-table {
+            width: 100%;
+        }
+        </style>
+    </head>
+
+
+    <body>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Block签</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#">
+                            <span class="glyphicon glyphicon-user"></span> XX老师</a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="glyphicon glyphicon-log-in"></span> 退出登录</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <nav class="nav nav-pills nav-stacked" role="navigation">
+            <ul class="nav nav-pills nav-stacked left_ul">
+                <li role="presentation">
+                    <a href="register.html">
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp&nbsp设置签到</a>
+                </li>
+                <li role="presentation">
+                    <a href="mycourse.html">
+                        <span class="glyphicon glyphicon-book"></span>&nbsp&nbsp我的课程</a>
+                </li>
+                <li role="presentation"  class="active">
+        
+                    <a href="#">
+                        <span class="glyphicon glyphicon-sunglasses"></span>&nbsp&nbsp查看签到</a>
+                </li>
+                <li role="presentation">
+                    <a href="#">
+                        <span class="glyphicon glyphicon-lock"></span>&nbsp&nbsp修改密码</a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="wraper">
+            <!-- <input type="text" class="form-control" id="search-content" value="">
+            <span class="input-group-btn">
+                <button class="btn btn-search" type="button" id='add'>搜索</button>
+            </span> -->
+            <table id="data-table" class="table table-hover"></table>
+        </div>   
+
+<script>
+    $('#data-table').bootstrapTable({
+        
+        url: 'http://39.105.109.207:5000/teacher?quary=true',
+        pageSize:15, 
+        pageList: [15],
+        pagination: true,
+        toolbar: '#toolbar',  
+        showRefresh: true, 
+        search: true,  
+        striped: true,
+        sidePagination: 'client',
+
+        columns: [{
+            field: 'id',
+            title: '学生学号', 
+        }, {
+            field: 'name',
+            title: '学生姓名', 
+        }, {
+            field: 'course',
+            title: '课程名', 
+        },      
+        {
+            field: 'signin-time',
+            title: '签到时间', 
+        }
+        ]
+    });
+
+</script>
+</body>
+</html>
