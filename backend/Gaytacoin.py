@@ -120,7 +120,7 @@ def student_register_info():
             res .append(copy.deepcopy(dic))
         return json.dumps([{"response_code":1},res])
     else:
-        return json.dumps({"response_code":0})
+        return json.dumps(["response_code":0])
 
 #签到(返回的是response_code)
 @app.route('/student/register',methods=['POST'])
