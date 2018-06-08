@@ -7,7 +7,7 @@ import requests
 import copy
 from textwrap import dedent
 from blockchain import Blockchain
-from time import time
+import time
 from uuid import uuid4
 from urllib.parse import urlparse
 from flask import Flask, jsonify, request, render_template,make_response
@@ -17,8 +17,10 @@ from wtforms import StringField,SubmitField,DecimalField
 from wtforms.validators import DataRequired
 from blockchain import MyForm, Register_Form
 from datetime import datetime
+from datetime import timedelta
 from threading import Timer
-import sched
+#import sched
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from student import Student_Manager
 from teacher import Teacher_Manager
@@ -159,9 +161,12 @@ def teacher_login():
 
     if(res):
         active_teachers.append(teacherId)
-        s = sched.scheduler(time.time, time.sleep)
-        s.enter(600, 1, teacher_logout, (teacherId))
-        s.run()
+        #s = sched.scheduler(time.time, time.sleep)
+        #s.enter(600, 0, teacher_logout, (teacherId,))
+        #s.run()
+        scheduler = BackgroundScheduler()
+        scheduler.add_job(teacher_logout, 'date', run_date = timedelta(minutes=10) + datetime.now(), args=[])
+        scheduler.start()
     
     result_text = {"response_code":int(res)}
     response = make_response(jsonify(result_text))
