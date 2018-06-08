@@ -103,7 +103,8 @@ Page({
             })
           }
           // if the stu is too late to sign in
-          else if (res_json["timestamp"] >= cur_timestamp) {
+          // give 2 min error range
+          else if (res_json["timestamp"] >= cur_timestamp - 120) {
             wx.request({
               url: 'http://39.105.109.207:5000/student/register',
               data: {
@@ -125,14 +126,7 @@ Page({
                     duration: 2000
                   })
                 }
-                //迟到
-                else if (res.data.response_code == 0) {
-                  wx.showToast({
-                    title: '签到晚了哦',
-                    icon: 'none',
-                    duration: 2000
-                  })
-                }
+                
                 //课程不存在
                 else if (res.data.response_code == -1) {
                   wx.showToast({
