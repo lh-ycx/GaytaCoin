@@ -138,11 +138,12 @@ class Teacher_Manager(object):
         return True
 
     def checkPassword(self,teacherId,password):
-        res = self.db.Teacher.find_one({'teacherId':teacherId})['password']
+        res = self.db.Teacher.find_one({'teacherId':teacherId})
+        #['password']
         if res is None:
             print("error: teacher ",teacherId," does not exist!")
             return False
-        if res == password:
+        if res['password'] == password:
             return True
         return False
     
