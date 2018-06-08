@@ -1,13 +1,17 @@
 //index.js
 //获取应用实例
 var app = getApp()
+var EARTH_RADIUS = 6378.137; //地球半径
+var longitude_base1 = 39.98942;
+var latitude_base1 = 116.312910;
 
 Page({
   data: {
     hasUserInfo:false,
     userInfo:{},
-    indexmenu: [],
+    indexmenu: [] 
   },
+  
   //事件处理函数
   fetchData: function () {
     this.setData({
@@ -43,9 +47,21 @@ Page({
     })
     
     //console.log(this.data.userInfo)
-  },
-  
+    wx.getLocation({
+      type: 'gcj02', // use gcj02 which is the tencent map
+      success: function (res) {
+        that.setData({
+          latitude: res.latitude,
+          longitude: res.longitude
+        })
+        console.log(that.data.latitude, that.data.longitude)
+      }
+    })
+    var dist = this.getDistance(latitude_base1,longitude_base1, 116.310089, 39.98853)
+    console.log(dist)
+  },  
   nav_changeImg: function(event){
+    var that = this
     //console.log(event['target']['id'])
     if(event['target']['id']==0){
       this.setData({
@@ -76,7 +92,18 @@ Page({
           cur_timestamp = cur_timestamp / 1000;
           console.log(res.result)
           var res_json = JSON.parse(res.result)
-          if (res_json["timestamp"] >= cur_timestamp) {
+          var longitude_base = res_json["longitude"]
+          var latitude_base = res_json["latitude"]
+          // if stu.location is too far from the teacher
+          if(that.getDistance(latitude_base,longitude_base,that.data.latitude,that.data.longitude) > 0.15){
+            wx.showToast({
+              title: 'too far',
+              icon: 'none',
+              duration: 2000
+            })
+          }
+          // if the stu is too late to sign in
+          else if (res_json["timestamp"] >= cur_timestamp) {
             wx.request({
               url: 'http://39.105.109.207:5000/student/register',
               data: {
@@ -125,7 +152,7 @@ Page({
               },
               complete: function () {
                 wx.redirectTo({
-                  url: '../index/index'
+                  url: '../my/my'
                 })
               }
             })
@@ -183,5 +210,20 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo:true
     })
+  },
+  rad: function(d) {
+    return d * Math.PI / 180.0;
+  },
+  getDistance:function (lng1, lat1, lng2, lat2) {
+    var radLat1 = this.rad(lat1);
+    var radLat2 = this.rad(lat2);
+    var a = radLat1 - radLat2;
+    var b = this.rad(lng1) - this.rad(lng2);
+    var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+      + Math.cos(radLat1) * Math.cos(radLat2)
+      * Math.pow(Math.sin(b / 2), 2)));
+    s = s * EARTH_RADIUS;
+    s = Math.round(s * 10000) / 10000;
+    return s;//返回数值单位：公里
   }
 })
