@@ -61,18 +61,21 @@
     <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <img src="../img/9.jpg" alt="">
     <div class="container">
-        <div class="form-group">
-            <label for="teacherId">User name</label>
-            <input class="form-control" id="teacherId" placeholder="Enter user name ">
+        <div style="margin-top: 30px;">
+            <div class="form-group">
+                <label for="teacherId">User name</label>
+                <input class="form-control" id="teacherId" placeholder="Enter user name ">
+            </div>
+            <div class="form-group ">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password ">
+            </div>
+            <label>
+                <input type="checkbox"> Remember me
+            </label>
+            <button class="btn btn-default" id="login">Sign in</button>
         </div>
-        <div class="form-group ">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password ">
-        </div>
-        <label>
-            <input type="checkbox"> Remember me
-        </label>
-        <button class="btn btn-default" id="login">Sign in</button>
+
     </div>
 
     <script>
@@ -88,8 +91,8 @@
                 data: JSON.stringify({ teacherId: _teacherId, password: _password }),
                 success: function (res) {
                     console.log(res);
-                    if(res['response_code'] == 1) {
-                        alert("登陆成功");
+                    if (res['response_code'] == 1) {
+                        window.location.href = './register.html?teacherid='+_teacherId;
                     }
                     else {
                         alert('账号或密码错误！');

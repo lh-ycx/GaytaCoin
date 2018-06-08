@@ -73,31 +73,6 @@
     <script type="text/javascript" src="../js/bootstrap-datetimepicker.js"></script>
     <script type="text/javascript" src="../js/GPS.js"></script>
 
-    <script>
-        $.ajax({
-            type: 'POST',
-            url: 'http://39.105.109.207:5000/teacher/courseInfo',
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify({ teacherId: "1500012863" }),
-            success: function (res) {
-                console.log(res);
-                if (res[0]['response_code'] != 1) {
-                    alert('获取教师信息错误！');
-                    console.log(res['response_code']);
-                }
-                var courses = res[1];
-                //console.log(courses);
-                for (var i = 0; i < courses.length; i++) {
-                    //console.log(i);
-                    //console.log(courses[i]['courseName']);
-                    //console.log(courses[i]['courseId']);
-                    $('#cs').append("<li><a href=\"#\" value=\"" + courses[i]['courseId'] + "\">" + courses[i]['courseName'] + "</a></li>");
-                }
-            }
-        })
-    </script>
-
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -188,15 +163,80 @@
             var ddl             //签到截止时间
             var cur_courseid    //当前课程id
             var GCJ             //地图坐标GCJ_02
+            var _teacherId      //teadherId
+            //检查是否登陆
+            function GetRequest() {
+                var url = location.search; //获取url中"?"符后的字串   
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            }
+            (function checklogin() {
+                var parameters = GetRequest();
+                console.log('web parameters:');
+                console.log(parameters);
+                _teacherId = parameters['teacherid'];
+                console.log('teacher id:');
+                console.log(_teacherId);
+                if (!_teacherId) {
+                    alert('您还没有登陆，请先登录！');
+                    window.location.href = './login.html';
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://39.105.109.207:5000/teacher/ifreg',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ teacherId: _teacherId }),
+                    success: function (res) {
+                        console.log('check login:');
+                        console.log(res);
+                        if (res['response_code'] == 1) {
+                            
+                        } else {
+                            alert('您还没有登陆，请先登录！');
+                            window.location.href = './login.html';
+                        }
+                    }
+                })
+            })()
+            //获取坐标
             navigator.geolocation.getCurrentPosition(function (location) {
-                console.log("???");
                 GCJ = GPS.gcj_encrypt(location.coords.latitude, location.coords.longitude);
                 console.log('GCJ:' + GCJ['lat'] + ',' + GCJ['lon']);
                 console.log('WGS:' + location.coords.latitude + ',' + location.coords.longitude);
-                alert(GCJ['lat']+','+GCJ['lon']);
+                //alert(GCJ['lat'] + ',' + GCJ['lon']);
                 //alert(location.coords.latitude+','+location.coords.longitude);
             })
-
+            //获取教师课程
+            $.ajax({
+                type: 'POST',
+                url: 'http://39.105.109.207:5000/teacher/courseInfo',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ teacherId: "1500012863" }),
+                success: function (res) {
+                    console.log(res);
+                    if (res[0]['response_code'] != 1) {
+                        alert('获取教师信息错误！');
+                        console.log(res['response_code']);
+                    }
+                    var courses = res[1];
+                    //console.log(courses);
+                    for (var i = 0; i < courses.length; i++) {
+                        //console.log(i);
+                        //console.log(courses[i]['courseName']);
+                        //console.log(courses[i]['courseId']);
+                        $('#cs').append("<li><a href=\"#\" value=\"" + courses[i]['courseId'] + "\">" + courses[i]['courseName'] + "</a></li>");
+                    }
+                }
+            })
             //时间选择
             $(".form_datetime").datetimepicker({
                 format: "yyyy-mm-dd hh:ii",
@@ -227,6 +267,14 @@
                 console.log('坐标：' + GCJ);
                 if (!GCJ) {
                     alert("请允许获取您的位置信息！");
+                    navigator.geolocation.getCurrentPosition(function (location) {
+                        console.log("???");
+                        GCJ = GPS.gcj_encrypt(location.coords.latitude, location.coords.longitude);
+                        console.log('GCJ:' + GCJ['lat'] + ',' + GCJ['lon']);
+                        console.log('WGS:' + location.coords.latitude + ',' + location.coords.longitude);
+                        //alert(GCJ['lat'] + ',' + GCJ['lon']);
+                        //alert(location.coords.latitude+','+location.coords.longitude);
+                    })
                 }
                 if (cur_courseid && cur_coursename && ddl) {
                     $('#qrcode').qrcode({
