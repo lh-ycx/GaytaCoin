@@ -1,4 +1,5 @@
 //app.js
+
 App({
   onLaunch: function () {
     var that=this
@@ -52,6 +53,20 @@ App({
         }
       }
     })  
+
+    // get location
+    /*
+    wx.getLocation({
+      success: function(res) {
+        var latitude = res.latitude
+        var longitude = res.longitude
+        var horizontalAccuracy = res.horizontalAccuracy
+        var accuracy = res.accuracy
+        console.log(latitude,longitude,accuracy,horizontalAccuracy)
+        
+      }
+    })
+    */
   },
   globalData: {
     userInfo: null,

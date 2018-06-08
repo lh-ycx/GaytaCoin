@@ -71,15 +71,16 @@
     <script type="text/javascript" src="../js/jquery.qrcode.min.js"></script>
     <script type="text/javascript" src="../js/locales/bootstrap-datetimepicker.fr.js"></script>
     <script type="text/javascript" src="../js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="../js/GPS.js"></script>
 
     <script>
         $.ajax({
-            type:'POST',
-            url:'http://39.105.109.207:5000/teacher/courseInfo',
+            type: 'POST',
+            url: 'http://39.105.109.207:5000/teacher/courseInfo',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: JSON.stringify({teacherId:"1500012863"}),
-            success: function(res) {
+            data: JSON.stringify({ teacherId: "1500012863" }),
+            success: function (res) {
                 console.log(res);
                 if (res[0]['response_code'] != 1) {
                     alert('获取教师信息错误！');
@@ -87,11 +88,11 @@
                 }
                 var courses = res[1];
                 //console.log(courses);
-                for(var i = 0; i < courses.length; i++) {
+                for (var i = 0; i < courses.length; i++) {
                     //console.log(i);
                     //console.log(courses[i]['courseName']);
                     //console.log(courses[i]['courseId']);
-                    $('#cs').append("<li><a href=\"#\" value=\""+courses[i]['courseId']+"\">"+courses[i]['courseName']+"</a></li>");
+                    $('#cs').append("<li><a href=\"#\" value=\"" + courses[i]['courseId'] + "\">" + courses[i]['courseName'] + "</a></li>");
                 }
             }
         })
@@ -121,12 +122,12 @@
                     <span class="glyphicon glyphicon-pencil"></span>&nbsp&nbsp设置签到</a>
             </li>
             <li role="presentation">
-                <a href="./mycourse.html">
+                <a href="mycourse.html">
                     <span class="glyphicon glyphicon-book"></span>&nbsp&nbsp我的课程</a>
             </li>
             <li role="presentation">
 
-                <a href="#">
+                <a href="table.html">
                     <span class="glyphicon glyphicon-sunglasses"></span>&nbsp&nbsp查看签到</a>
             </li>
             <li role="presentation">
@@ -145,7 +146,7 @@
                     请选择课程
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id = "cs">
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="cs">
                     <!--<li>
                         <a href="#" class="course" id="c1" value="">???</a>
                     </li>
@@ -186,6 +187,17 @@
             var cur_coursename  //当前课程名
             var ddl             //签到截止时间
             var cur_courseid    //当前课程id
+            var GCJ             //地图坐标GCJ_02
+            
+            navigator.geolocation.getCurrentPosition(function (location) {
+                console.log(GPS);
+                GCJ = GPS.gcj_encrypt(location.coords.latitude, location.coords.longitude);
+                console.log('GCJ:' + GCJ['lat'] + ',' + GCJ['lon']);
+                console.log('WGS:' + location.coords.latitude + ',' + location.coords.longitude);
+                //alert(GCJ['lat']+','+GCJ['lon']);
+                //alert(location.coords.latitude+','+location.coords.longitude);
+            })
+
             //时间选择
             $(".form_datetime").datetimepicker({
                 format: "yyyy-mm-dd hh:ii",
@@ -213,13 +225,13 @@
                 console.log('截止时间：' + ddl);
                 var timestamp = Date.parse(new Date(ddl));
                 timestamp = timestamp / 1000;
-                console.log("截止时间戳为："+timestamp)
+                console.log("截止时间戳为：" + timestamp)
                 if (cur_courseid && cur_coursename && ddl) {
                     $('#qrcode').qrcode({
                         render: "canvas", //table方式
                         width: 300, //宽度
                         height: 300, //高度
-                        text: '{\"courseId\":'+cur_courseid +",\"timestamp\":"+ timestamp+'}'//任意内容
+                        text: '{\"courseId\":' + cur_courseid + ",\"timestamp\":" + timestamp + ',\"longitude\":'+GCJ['lon'] + ',\"latitude\":'+GCJ['lat']+'}'
                     });
                 }
                 else {
