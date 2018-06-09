@@ -45,6 +45,11 @@
         #data-table {
             width: 100%;
         }
+
+		.dropdown {
+            display: block;
+            float: left;
+        }
         </style>
     </head>
 
@@ -95,38 +100,120 @@
             <span class="input-group-btn">
                 <button class="btn btn-search" type="button" id='add'>搜索</button>
             </span> -->
+            <div id="toolbar" class="dropdown">
+				<button class="btn btn-default dropdown-toggle" type="button" id="course-option" data-toggle="dropdown" aria-haspopup="true"
+				 aria-expanded="true" style="width: 100px;">
+					请选择课程
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="course-option" id = "courses"></ul>
+            </div>
             <table id="data-table" class="table table-hover"></table>
         </div>   
 
 <script>
-    $('#data-table').bootstrapTable({
-        
-        url: 'http://39.105.109.207:5000/teacher?quary=true',
-        pageSize:15, 
-        pageList: [15],
-        pagination: true,
-        toolbar: '#toolbar',  
-        showRefresh: true, 
-        search: true,  
-        striped: true,
-        sidePagination: 'client',
 
-        columns: [{
-            field: 'id',
-            title: '学生学号', 
-        }, {
-            field: 'name',
-            title: '学生姓名', 
-        }, {
-            field: 'course',
-            title: '课程名', 
-        },      
-        {
-            field: 'signin-time',
-            title: '签到时间', 
-        }
-        ]
-    });
+    $.ajax({
+        type:'POST',
+        url:'http://39.105.109.207:5000/teacher/courseInfo',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({teacherId:"1500012863"}),
+        success: function (res) {
+			console.log(res);
+			if (res[0]['response_code'] != 1) {
+				alert('获取教师信息错误！');
+				console.log(res['response_code']);
+			}
+			var courses = res[1];
+			for (var i = 0; i < courses.length; i++) {
+				$('#courses').append("<li><a href=\"#\" value=\"" + courses[i]['courseId'] + "\">" + courses[i]['courseName'] + "</a></li>");
+			}
+		}
+	})
+
+	$("#courses").click(function (e) {
+		console.log("get here");
+		cur_coursename = $(e.target).html();
+		cur_courseid = $(e.target).attr("value");
+		console.log('选择了课程名：' + cur_coursename)
+		console.log('选择了课程号：' + cur_courseid)
+		$("#course-option").html(cur_coursename + "<span class='caret'></span>");
+	});
+
+	$("#courses").click(function (e) {
+		console.log("get here");
+		cur_coursename = $(e.target).html();
+		cur_courseid = $(e.target).attr("value");
+		console.log('选择了课程名：' + cur_coursename)
+		console.log('选择了课程号：' + cur_courseid)
+		$("#course-option").html(cur_coursename + "<span class='caret'></span>");
+		showCourseTable(cur_courseid);
+	});
+    
+
+	var count = 0;
+	var curCourseId;
+    function showCourseTable(cId) {
+		// $('#data-table').html("");
+		curCourseId = parseInt(cId);
+
+		queryInfo = {
+            method: 'post',
+            url: 'http://39.105.109.207:5000/teacher/registerList',
+            pageSize: 15,
+            pageList: [15],
+            pagination: true,
+            showRefresh: true,
+            search: true,
+            striped: true,
+            sidePagination: 'client',
+            
+            queryParams: function (params) {
+				console.log(curCourseId);
+                return {
+                    courseId: curCourseId
+                }
+            },
+
+            responseHandler: function (res) {
+                console.log("233");
+                console.log(res);
+                return res[1];
+            },
+			
+			// data: [{
+			// 	stuName: "fucker", 
+			// 	stuId: cId, 
+			// 	courseName: "fff", 
+			// 	ttimestamp: "eeee"
+			// }], 
+
+            columns: [{
+                field: 'stuName',
+                title: '学生姓名',
+            }, {
+                field: 'stuId',
+                title: '学生学号',
+            }, {
+                field: 'courseName',
+                title: '课程名',
+            },
+            {
+                field: 'timestamp',
+                title: '签到时间',
+            }]
+        }; 
+		
+		if (count == 0) {
+			$('#data-table').bootstrapTable(queryInfo);
+		}
+		else {
+			$('#data-table').bootstrapTable("refresh");
+		}
+        
+		count = 1;
+    }
 
 </script>
 </body>
