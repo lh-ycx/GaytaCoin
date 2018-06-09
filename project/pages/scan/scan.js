@@ -71,8 +71,8 @@ Page({
               }
             },
             complete:function(){
-              wx.redirectTo({
-                url: '../index/index'
+              wx.navigateTo({
+                url: '../my/my',
               })
             }
           })

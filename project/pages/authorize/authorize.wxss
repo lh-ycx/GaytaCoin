@@ -1,49 +1,53 @@
 .input-box{
-  margin-top: 40%;
+  margin-top: 8%;
   margin-left: 20%;
   margin-right: 20%;
 }
 
 .input-row{
   margin-top: 20rpx;
+  display: flex;
+  flex-direction: row;
 }
 
 .input-label{
-  text-align: center;
+  width: 100rpx;
+  text-align: left;
+  align-self: center;
 }
 
 .input{
   border:  2px solid ivory;
-  border-radius: 25rpx;
-  margin-left: 10rpx;
-  margin-right: 10rpx;
-  margin-top: 10rpx;
-  
+  border-radius: 20rpx;
+  margin-top: 25rpx;
+  height: 75rpx;
+  width: 360rpx;
+  background-color: ivory;
 }
 
 .button-box{
-  margin-top: 10%;
+  margin-top: 5%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 button{
-  width: 200rpx;
-  height: 200rpx;
+  width: 280rpx;
+  height: 100rpx;
   margin: 20rpx;
-  border-radius: 50%;
-  color: ivory;
+  border-radius: 25rpx;
+  color:  floralwhite;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-  background-color:lightskyblue;
+  font-size: 36rpx;
+  background-color: orange;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 .button-hover{
-  color:azure;
-  background-color:lightskyblue;
-  top:7rpx;
+  background-color:bisque;
+  top:6rpx;
 }
 
 progress {
@@ -53,7 +57,29 @@ progress {
 
 .load-progess{
   text-align: center;
-  margin-top: 70%;
+  margin-top: 25%;
+}
+
+.notice{
+  text-align: center;
+  margin: 0 atuo;
+  margin-top: 2%;
+  color: gray;
+  font-size:20rpx;
+}
+
+.notice-img{
+  width:20rpx;
+  height: 20rpx;
+  margin-right:4rpx;
+}
+
+.logo{
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 50%;
+  margin-left: 38%;
+  margin-top: 25%;
 }
 
 .container {

@@ -55,10 +55,18 @@ Page({
           longitude: res.longitude
         })
         console.log(that.data.latitude, that.data.longitude)
+      },
+      fail:function(){
+        wx.showToast({
+          title: '请授权使用地理位置',
+          icon: 'none',
+          duration: 2000
+        })
+        
       }
     })
     var dist = this.getDistance(latitude_base1,longitude_base1, 116.310089, 39.98853)
-    console.log(dist)
+    //console.log(dist)
   },  
   nav_changeImg: function(event){
     var that = this
@@ -95,9 +103,11 @@ Page({
           var longitude_base = res_json["longitude"]
           var latitude_base = res_json["latitude"]
           // if stu.location is too far from the teacher
-          if(that.getDistance(latitude_base,longitude_base,that.data.latitude,that.data.longitude) > 0.15){
+          var distance = that.getDistance(latitude_base, longitude_base, that.data.latitude, that.data.longitude)
+          if(distance > 0.15){
+            console.log(distance)
             wx.showToast({
-              title: 'too far',
+              title: '你离教室有点远哦',
               icon: 'none',
               duration: 2000
             })
@@ -145,7 +155,7 @@ Page({
                 }
               },
               complete: function () {
-                wx.redirectTo({
+                wx.navigateTo({
                   url: '../my/my'
                 })
               }
@@ -193,6 +203,7 @@ Page({
     })
   },
   onGotUserInfo: function (e) {
+    console.log("in function")
     app.globalData.userInfo = e.detail.userInfo
     console.log(app.globalData.userInfo)
     // save to storage
