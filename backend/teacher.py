@@ -148,7 +148,7 @@ class Teacher_Manager(object):
         return False
     
     def getRegisterListbyCourseId(self,courseId):
-        res = self.db.Register.find({"courseId":courseId}).sort({"registerId":1})
+        res = self.db.Register.find({"courseId":courseId}).sort([{"registerId":1}])
         dic = {"openid":[],"courseId":[],"timestamp":[]}
         lis = []
         for c in res:
