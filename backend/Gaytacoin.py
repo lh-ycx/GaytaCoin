@@ -341,7 +341,8 @@ def teacher_register_info():
     j_data = yaml.safe_load(data)
 
     courseId = j_data['courseId']
-
+    
+    print(courseId)
     lis = teacher_manager.getRegisterListbyCourseId(courseId)
     res = []
     print(lis)
