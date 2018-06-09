@@ -156,6 +156,6 @@ class Teacher_Manager(object):
             dic["openid"] = c["openid"]
             dic["courseId"] = c["courseId"]
             dic["timestamp"] = c["timestamp"]
-            lis.append(dic)
+            lis.append(copy.deepcopy(dic))
 
         return lis
