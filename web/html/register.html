@@ -71,31 +71,7 @@
     <script type="text/javascript" src="../js/jquery.qrcode.min.js"></script>
     <script type="text/javascript" src="../js/locales/bootstrap-datetimepicker.fr.js"></script>
     <script type="text/javascript" src="../js/bootstrap-datetimepicker.js"></script>
-
-    <script>
-        $.ajax({
-            type:'POST',
-            url:'http://39.105.109.207:5000/teacher/courseInfo',
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            data: JSON.stringify({teacherId:"1500012863"}),
-            success: function(res) {
-                console.log(res);
-                if (res[0]['response_code'] != 1) {
-                    alert('获取教师信息错误！');
-                    console.log(res['response_code']);
-                }
-                var courses = res[1];
-                //console.log(courses);
-                for(var i = 0; i < courses.length; i++) {
-                    //console.log(i);
-                    //console.log(courses[i]['courseName']);
-                    //console.log(courses[i]['courseId']);
-                    $('#cs').append("<li><a href=\"#\" value=\""+courses[i]['courseId']+"\">"+courses[i]['courseName']+"</a></li>");
-                }
-            }
-        })
-    </script>
+    <script type="text/javascript" src="../js/GPS.js"></script>
 
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
@@ -104,11 +80,12 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#">
-                        <span class="glyphicon glyphicon-user"></span> XX老师</a>
+                    <a href="#" id="teacher_name">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="#" id="log_out">
                         <span class="glyphicon glyphicon-log-in"></span> 退出登录</a>
                 </li>
             </ul>
@@ -117,20 +94,19 @@
     <nav class="nav nav-pills nav-stacked" role="navigation">
         <ul class="nav nav-pills nav-stacked left_ul">
             <li role="presentation" class="active">
-                <a href="#">
+                <a href="#" id='a1'>
                     <span class="glyphicon glyphicon-pencil"></span>&nbsp&nbsp设置签到</a>
             </li>
             <li role="presentation">
-                <a href="mycourse.html">
+                <a href="./mycourse.html" id='a2'>
                     <span class="glyphicon glyphicon-book"></span>&nbsp&nbsp我的课程</a>
             </li>
             <li role="presentation">
-
-                <a href="table.html">
+                <a href="./table.html" id='a3'>
                     <span class="glyphicon glyphicon-sunglasses"></span>&nbsp&nbsp查看签到</a>
             </li>
             <li role="presentation">
-                <a href="#">
+                <a href="./set.html" id='a4'>
                     <span class="glyphicon glyphicon-lock"></span>&nbsp&nbsp修改密码</a>
             </li>
         </ul>
@@ -145,7 +121,7 @@
                     请选择课程
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id = "cs">
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="cs">
                     <!--<li>
                         <a href="#" class="course" id="c1" value="">???</a>
                     </li>
@@ -186,6 +162,122 @@
             var cur_coursename  //当前课程名
             var ddl             //签到截止时间
             var cur_courseid    //当前课程id
+            var GCJ             //地图坐标GCJ_02
+            var _teacherId      //teadherId
+            //检查是否登陆并初始化导航栏
+            function GetRequest() {
+                var url = location.search; //获取url中"?"符后的字串   
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            }
+            (function checklogin() {
+                var parameters = GetRequest();
+                //console.log('web parameters:');
+                //console.log(parameters);
+                _teacherId = parameters['teacherid'];
+                //console.log('teacher id:');
+                //console.log(_teacherId);
+                if (!_teacherId) {
+                    alert('您还没有登陆，请先登录！');
+                    window.location.href = './login.html';
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://39.105.109.207:5000/teacher/ifreg',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ teacherId: _teacherId }),
+                    success: function (res) {
+                        //console.log('check login:');
+                        //console.log(res);
+                        if (res['response_code'] == 1) {
+                            //左边链接加入参数teacherid
+                            $('#a1').attr('href', '#');
+                            $('#a2').attr('href', './mycourse.html?teacherid=' + _teacherId);
+                            $('#a3').attr('href', './table.html?teacherid=' + _teacherId);
+                            $('#a4').attr('href', './set.html?teacherid=' + _teacherId);
+                            //右上角老师姓名初始化
+                            $.ajax({
+                                type: 'POST',
+                                url: 'http://39.105.109.207:5000/teacher/info',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                data: JSON.stringify({ teacherId: _teacherId }),
+                                success: function (res) {
+                                    if (res['response_code'] == 1) {
+                                        //console.log($('#teacher_name').html());
+                                        $('#teacher_name').html($('#teacher_name').html() + res['teacherName'] + '老师');
+                                    } else {
+                                        console.log('teacher info:')
+                                        console.log(res);
+                                    }
+                                }
+                            })
+                        } else {
+                            alert('您还没有登陆，请先登录！');
+                            window.location.href = './login.html';
+                        }
+                    }
+                })
+            })()
+            //退出功能
+            $('#log_out').click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://39.105.109.207:5000/teacher/logout',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ teacherId: _teacherId }),
+                    success: function (res) {
+                        if (res['response_code'] == 1) {
+                            alert('成功退出');
+                            window.location.href = './login.html'
+                        } else {
+                            console.logo('退出失败，服务器返回结果：')
+                            console.log(res);
+                        }
+                    }
+                })
+            })
+
+            //获取坐标
+            /*navigator.geolocation.getCurrentPosition(function (location) {
+                //GCJ = GPS.gcj_encrypt(location.coords.latitude, location.coords.longitude);
+                //console.log('GCJ:' + GCJ['lat'] + ',' + GCJ['lon']);
+                //console.log('WGS:' + location.coords.latitude + ',' + location.coords.longitude);
+                //alert(GCJ['lat'] + ',' + GCJ['lon']);
+                //alert(location.coords.latitude+','+location.coords.longitude);
+            })*/
+            //获取教师课程
+            $.ajax({
+                type: 'POST',
+                url: 'http://39.105.109.207:5000/teacher/courseInfo',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({ teacherId: "1500012863" }),
+                success: function (res) {
+                    //console.log(res);
+                    if (res[0]['response_code'] != 1) {
+                        alert('获取教师信息错误！');
+                        //console.log(res['response_code']);
+                    }
+                    var courses = res[1];
+                    //console.log(courses);
+                    for (var i = 0; i < courses.length; i++) {
+                        //console.log(i);
+                        //console.log(courses[i]['courseName']);
+                        //console.log(courses[i]['courseId']);
+                        $('#cs').append("<li><a href=\"#\" value=\"" + courses[i]['courseId'] + "\">" + courses[i]['courseName'] + "</a></li>");
+                    }
+                }
+            })
             //时间选择
             $(".form_datetime").datetimepicker({
                 format: "yyyy-mm-dd hh:ii",
@@ -198,7 +290,6 @@
             })
             //课程选择
             $("#cs").click(function (e) {
-                console.log("get here");
                 cur_coursename = $(e.target).html();
                 cur_courseid = $(e.target).attr("value");
                 console.log('选择了课程名：' + cur_coursename)
@@ -213,17 +304,41 @@
                 console.log('截止时间：' + ddl);
                 var timestamp = Date.parse(new Date(ddl));
                 timestamp = timestamp / 1000;
-                console.log("截止时间戳为："+timestamp)
-                if (cur_courseid && cur_coursename && ddl) {
-                    $('#qrcode').qrcode({
-                        render: "canvas", //table方式
-                        width: 300, //宽度
-                        height: 300, //高度
-                        text: '{\"courseId\":'+cur_courseid +",\"timestamp\":"+ timestamp+'}'//任意内容
-                    });
-                }
-                else {
-                    alert("设置不完整，请先设置！");
+                console.log("截止时间戳为：" + timestamp)
+                console.log('坐标：');
+                if(GCJ) console.log('GCJ:' + GCJ['lat'] + ',' + GCJ['lon']);
+                if (!GCJ) {
+                    alert("请允许获取您的位置信息！");
+                    navigator.geolocation.getCurrentPosition(function (location) {
+                        GCJ = GPS.gcj_encrypt(location.coords.latitude, location.coords.longitude);
+                        console.log('GCJ:' + GCJ['lat'] + ',' + GCJ['lon']);
+                        //console.log('WGS:' + location.coords.latitude + ',' + location.coords.longitude);
+                        //alert(GCJ['lat'] + ',' + GCJ['lon']);
+                        //alert(location.coords.latitude+','+location.coords.longitude);
+                        if (cur_courseid && cur_coursename && ddl) {
+                            $('#qrcode').qrcode({
+                                render: "canvas", //table方式
+                                width: 300, //宽度
+                                height: 300, //高度
+                                text: '{\"courseId\":' + cur_courseid + ",\"timestamp\":" + timestamp + ',\"longitude\":' + GCJ['lon'] + ',\"latitude\":' + GCJ['lat'] + '}'
+                            });
+                        }
+                        else {
+                            alert("设置不完整，请先设置！");
+                        }
+                    })
+                } else {
+                    if (cur_courseid && cur_coursename && ddl) {
+                        $('#qrcode').qrcode({
+                            render: "canvas", //table方式
+                            width: 300, //宽度
+                            height: 300, //高度
+                            text: '{\"courseId\":' + cur_courseid + ",\"timestamp\":" + timestamp + ',\"longitude\":' + GCJ['lon'] + ',\"latitude\":' + GCJ['lat'] + '}'
+                        });
+                    }
+                    else {
+                        alert("设置不完整，请先设置！");
+                    }
                 }
             })
         </script>

@@ -6,17 +6,19 @@ class Course_Manager(object):
     
     def getCourseName(self,courseId):
         if self.db.Courses:
-            res = self.db.Courses.find_one({"courseId":courseId})['courseName']
+            res = self.db.Courses.find_one({"courseId":courseId})
+            #['courseName']
             if res is None:
-                return False
-            return res
+                return ""
+            return res['courseName']
         else:
             return False 
     def getCourseId(self,courseName):
         if self.db.Courses:
-            res = self.db.Courses.find_one({"courseName":courseName})['courseId']
+            res = self.db.Courses.find_one({"courseName":courseName})
+            #['courseId']
             if res is  None:
                 return False
-            return res
+            return res['courseId']
         else:
             return False

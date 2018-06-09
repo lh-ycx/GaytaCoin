@@ -61,11 +61,12 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#">
-                        <span class="glyphicon glyphicon-user"></span> XX老师</a>
+                    <a href="#" id="teacher_name">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="#" id="log_out">
                         <span class="glyphicon glyphicon-log-in"></span> 退出登录</a>
                 </li>
             </ul>
@@ -74,20 +75,20 @@
     <nav class="nav nav-pills nav-stacked" role="navigation">
         <ul class="nav nav-pills nav-stacked left_ul">
             <li role="presentation">
-                <a href="register.html">
+                <a href="./register.html" id="a1">
                     <span class="glyphicon glyphicon-pencil"></span>&nbsp&nbsp设置签到</a>
             </li>
             <li role="presentation" class="active">
-                <a href="#">
+                <a href="#" id="a2">
                     <span class="glyphicon glyphicon-book"></span>&nbsp&nbsp我的课程</a>
             </li>
             <li role="presentation">
 
-                <a href="table.html">
+                <a href="./table.html" id="a3">
                     <span class="glyphicon glyphicon-sunglasses"></span>&nbsp&nbsp查看签到</a>
             </li>
             <li role="presentation">
-                <a href="#">
+                <a href="./set.html" id="a4">
                     <span class="glyphicon glyphicon-lock"></span>&nbsp&nbsp修改密码</a>
             </li>
         </ul>
@@ -114,12 +115,6 @@
         </div>-->
         <table id="mytab" class="table table-hover"></table>
         <div id="toolbar" class="btn-group pull-right" style="margin-right: 20px;">
-            <button id="btn_edit" type="button" class="btn btn-default" style="display: none; border-radius: 0">
-                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
-            </button>
-            <button id="btn_delete" type="button" class="btn btn-default" style="display: none;">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
-            </button>
             <div class="col-lg-6" style="float: right; margin-top: 40px;">
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="请输入课程名" id="csname" value="">
@@ -130,6 +125,91 @@
             </div>
         </div>
         <script>
+            var _teacherId      //teadherId
+            //检查是否登陆并初始化导航栏
+            function GetRequest() {
+                var url = location.search; //获取url中"?"符后的字串   
+                var theRequest = new Object();
+                if (url.indexOf("?") != -1) {
+                    var str = url.substr(1);
+                    strs = str.split("&");
+                    for (var i = 0; i < strs.length; i++) {
+                        theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                    }
+                }
+                return theRequest;
+            }
+            (function checklogin() {
+                var parameters = GetRequest();
+                //console.log('web parameters:');
+                //console.log(parameters);
+                _teacherId = parameters['teacherid'];
+                //console.log('teacher id:');
+                //console.log(_teacherId);
+                if (!_teacherId) {
+                    alert('您还没有登陆，请先登录！');
+                    window.location.href = './login.html';
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://39.105.109.207:5000/teacher/ifreg',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ teacherId: _teacherId }),
+                    success: function (res) {
+                        //console.log('check login:');
+                        //console.log(res);
+                        if (res['response_code'] == 1) {
+                            //左边链接加入参数teacherid
+                            $('#a1').attr('href', './register.html?teacherid=' + _teacherId);
+                            $('#a2').attr('href', '#');
+                            $('#a3').attr('href', './table.html?teacherid=' + _teacherId);
+                            $('#a4').attr('href', './set.html?teacherid=' + _teacherId);
+                            //右上角老师姓名初始化
+                            $.ajax({
+                                type: 'POST',
+                                url: 'http://39.105.109.207:5000/teacher/info',
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                data: JSON.stringify({ teacherId: _teacherId }),
+                                success: function (res) {
+                                    if (res['response_code'] == 1) {
+                                        //console.log($('#teacher_name').html());
+                                        $('#teacher_name').html($('#teacher_name').html() + res['teacherName'] + '老师');
+                                    } else {
+                                        console.log('teacher info:')
+                                        console.log(res);
+                                    }
+                                }
+                            })
+                        } else {
+                            alert('您还没有登陆，请先登录！');
+                            window.location.href = './login.html';
+                        }
+                    }
+                })
+            })()
+            //退出功能
+            $('#log_out').click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://39.105.109.207:5000/teacher/logout',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({ teacherId: _teacherId }),
+                    success: function (res) {
+                        if (res['response_code'] == 1) {
+                            alert('成功退出');
+                            window.location.href = './login.html'
+                        } else {
+                            console.logo('退出失败，服务器返回结果：')
+                            console.log(res);
+                        }
+                    }
+                })
+            })
+
+
             window.operateEvents = {
                 "click #delcs": function (e, value, row, index) {
                     //console.log(row)
@@ -143,14 +223,14 @@
                         data: JSON.stringify({ teacherId: "1500012863", courseId: del_csid }),
                         success: function (res) {
                             console.log(res);
-                            if(res['response_code'] == 1) {
-                                alert('成功删除课程：'+del_csname);
+                            if (res['response_code'] == 1) {
+                                alert('成功删除课程：' + del_csname);
                                 window.location.reload();
                             }
                             else {
                                 alert('失败！');
                             }
-                            
+
                         }
                     })
                 }
@@ -191,7 +271,7 @@
                         title: '操作',
                         field: 'tel',
                         events: operateEvents,
-                        formatter: "<button type=\"button\" id=\"delcs\" class=\"btn btn-default\"><span class=\"glyphicon glyphicon-remove\"></span></button>"
+                        formatter: "<button type=\"button\" id=\"delcs\" class=\"btn btn-danger\">删除</button>"
                     }
                 ]
             })
@@ -207,7 +287,7 @@
                     data: JSON.stringify({ teacherId: "1500012863", course_name: courseName }),
                     success: function (res) {
                         console.log(res);
-                        if(res['response_code'] == 1) {
+                        if (res['response_code'] == 1) {
                             alert("添加成功");
                             window.location.reload();
                         } else {
