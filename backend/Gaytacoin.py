@@ -344,6 +344,7 @@ def teacher_register_info():
 
     lis = teacher_manager.getRegisterListbyCourseId(courseId)
     res = []
+    print(lis)
     dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
     if lis:
         for l in lis:
@@ -353,6 +354,7 @@ def teacher_register_info():
             dic["timestamp"] = l["timestamp"]
             res .append(copy.deepcopy(dic))
 
+            print(res)
             result_text = [{"response_code":1 }, res]
             response = make_response(json.dumps(result_text))
             response.headers['Access-Control-Allow-Origin'] = '*'
