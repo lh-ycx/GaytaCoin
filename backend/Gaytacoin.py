@@ -340,6 +340,7 @@ def teacher_register_info():
     data = request.data
     j_data = yaml.safe_load(data)
 
+    print(j_data)
     courseId = j_data['courseId']
     
     print(courseId)
