@@ -7,7 +7,7 @@ import requests
 import copy
 from textwrap import dedent
 from blockchain import Blockchain
-from time import time
+import time
 from uuid import uuid4
 from urllib.parse import urlparse
 from flask import Flask, jsonify, request, render_template,make_response
@@ -17,8 +17,10 @@ from wtforms import StringField,SubmitField,DecimalField
 from wtforms.validators import DataRequired
 from blockchain import MyForm, Register_Form
 from datetime import datetime
+from datetime import timedelta
 from threading import Timer
-import sched
+#import sched
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from student import Student_Manager
 from teacher import Teacher_Manager
@@ -108,8 +110,10 @@ def student_register_info():
     
     lis =  student_manager.getRegisterListbyopenid(openid)
 
+    print(lis)
     dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
     
+    res = []
     if lis:
         for l in lis:
             dic["stuName"] = student_manager.getstuName(l["openid"])
@@ -119,7 +123,7 @@ def student_register_info():
             res .append(copy.deepcopy(dic))
         return json.dumps([{"response_code":1},res])
     else:
-        return json.dumps({"response_code":0})
+        return json.dumps([{"response_code":0}])
 
 #签到(返回的是response_code)
 @app.route('/student/register',methods=['POST'])
@@ -158,9 +162,12 @@ def teacher_login():
 
     if(res):
         active_teachers.append(teacherId)
-        s = sched.scheduler(time.time, time.sleep)
-        s.enter(600, 1, teacher_logout, (teacherId))
-        s.run()
+        #s = sched.scheduler(time.time, time.sleep)
+        #s.enter(600, 0, teacher_logout, (teacherId,))
+        #s.run()
+        scheduler = BackgroundScheduler()
+        scheduler.add_job(teacher_logout, 'date', run_date = timedelta(minutes=10) + datetime.now(), args=[])
+        scheduler.start()
     
     result_text = {"response_code":int(res)}
     response = make_response(jsonify(result_text))
@@ -334,11 +341,15 @@ def teacher_register_info():
     data = request.data
     j_data = yaml.safe_load(data)
 
+    print(j_data)
     courseId = j_data['courseId']
-
+    
+    print(courseId)
     lis = teacher_manager.getRegisterListbyCourseId(courseId)
     res = []
-    dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
+    print(lis)
+    #dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
+    dic ={}
     if lis:
         for l in lis:
             dic["stuName"] = student_manager.getstuName(l["openid"])
@@ -347,13 +358,14 @@ def teacher_register_info():
             dic["timestamp"] = l["timestamp"]
             res .append(copy.deepcopy(dic))
 
-            result_text = [{"response_code":1 }, res]
-            response = make_response(json.dumps(result_text))
-            response.headers['Access-Control-Allow-Origin'] = '*'
-            response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
-            response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
-            #return json.dumps([{"response_code":1},res]) 
-            return response
+        print(res)
+        result_text = [{"response_code":1 }, res]
+        response = make_response(json.dumps(result_text))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+        response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+        #return json.dumps([{"response_code":1},res]) 
+        return response
     else:
         result_text = {"response_code":0}
         response = make_response(jsonify(result_text))
@@ -490,6 +502,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     port = args.port
 
-    mine(10)
+    #mine(10)
 
     app.run(host='0.0.0.0', port=port)

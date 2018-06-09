@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import json
 import random
+import copy
 from flask_pymongo import PyMongo
 class Student_Manager(object):
     def __init__(self,db):
@@ -29,7 +30,7 @@ class Student_Manager(object):
             dic['openid'] = c['openid']
             dic['courseId'] = c['courseId']
             dic['timestamp'] = c['timestamp'] 
-            res.append(dic)
+            res.append(copy.deepcopy(dic))
         return res
 
     def addStudent(self,openid,stuId,stuName):
