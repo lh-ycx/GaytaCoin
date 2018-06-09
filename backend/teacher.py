@@ -149,7 +149,8 @@ class Teacher_Manager(object):
     
     def getRegisterListbyCourseId(self,courseId):
         res = self.db.Register.find({"courseId":courseId}).sort([("registerId",1)])
-        dic = {"openid":[],"courseId":[],"timestamp":[]}
+        #dic = {"openid":[],"courseId":[],"timestamp":[]}
+        dic = {}
         lis = []
         for c in res:
             dic["openid"] = c["openid"]

@@ -345,7 +345,8 @@ def teacher_register_info():
     lis = teacher_manager.getRegisterListbyCourseId(courseId)
     res = []
     print(lis)
-    dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
+    #dic = {"stuName":[],"stuId":[],"courseName":[],"timestamp":[]}
+    dic ={}
     if lis:
         for l in lis:
             dic["stuName"] = student_manager.getstuName(l["openid"])
