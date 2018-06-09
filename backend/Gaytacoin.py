@@ -357,14 +357,14 @@ def teacher_register_info():
             dic["timestamp"] = l["timestamp"]
             res .append(copy.deepcopy(dic))
 
-            print(res)
-            result_text = [{"response_code":1 }, res]
-            response = make_response(json.dumps(result_text))
-            response.headers['Access-Control-Allow-Origin'] = '*'
-            response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
-            response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
-            #return json.dumps([{"response_code":1},res]) 
-            return response
+        print(res)
+        result_text = [{"response_code":1 }, res]
+        response = make_response(json.dumps(result_text))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'OPTIONS,HEAD,GET,POST'
+        response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+        #return json.dumps([{"response_code":1},res]) 
+        return response
     else:
         result_text = {"response_code":0}
         response = make_response(jsonify(result_text))
