@@ -9,6 +9,8 @@
     <link href="../css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <title>Bloch签-教师版</title>
     <style>
+
+
         .left_ul {
             width: 200px;
         }
@@ -25,25 +27,31 @@
 
         .wraper {
             /*background-color: aqua;*/
-            float: left;
-            margin-left: 50px;
-            width: 1200px;
-            height: 650px;
+            position: fixed;
+            margin-left: 250px;
+            width: 80%;
+            /* min-width: 900px; */
+            height: auto;
         }
+
+
 
         .form-control {
             width: 200px;
-            display: block;
-            float: left;
+            /* display: block; */
+            /* float: left; */
+            display: inline-block;
         }
 
         .dropdown {
-            display: block;
-            float: left;
+            /* display: block; */
+            /* float: left; */
+            display: inline-block;
         }
 
         .fl {
-            float: left;
+            /* float: left; */
+            display: inline-block;
         }
 
         .config {
@@ -51,12 +59,14 @@
             margin: 0 auto;
             margin-top: 20px;
             height: 40px;
+            white-space:nowarp;
             /*background-color: blue;*/
         }
-
-        .form_datetime {
-            margin-left: 100px;
+        
+        .option {
+            margin: 20px;
         }
+
 
         canvas {
             display: block;
@@ -114,7 +124,7 @@
 
     <div class="wraper">
         <div class="config">
-            <div class="dropdown">
+            <div class="dropdown option">
                 <span style="font-size: 18px">签到课程：</span>
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="true" style="width: 100px;">
@@ -137,7 +147,7 @@
                 </ul>
             </div>
 
-            <div class="input-append date form_datetime fl" style="width: 400px; margin-right: 0">
+            <div class="input-append date option fl" style="width: 400px; margin-right: 0">
                 <div class="fl">
                     <span style="font-size: 18px;">截止时间：</span>
                 </div>
@@ -153,7 +163,7 @@
 
             </script>
 
-            <div class="fl">
+            <div class="fl option">
                 <button type="button" class="btn btn-default" id="qrbtn">生成二维码</button>
             </div>
         </div>
