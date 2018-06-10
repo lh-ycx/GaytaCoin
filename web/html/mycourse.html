@@ -220,7 +220,7 @@
                         url: 'http://39.105.109.207:5000/teacher/delCourse',
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
-                        data: JSON.stringify({ teacherId: "1500012863", courseId: del_csid }),
+                        data: JSON.stringify({ teacherId: _teacherId, courseId: del_csid }),
                         success: function (res) {
                             console.log(res);
                             if (res['response_code'] == 1) {
@@ -249,7 +249,7 @@
                 showRefresh: true,
                 queryParams: function (params) {
                     return {
-                        teacherId: "1500012863"
+                        teacherId: _teacherId
                     }
                 },
                 responseHandler: function (res) {
@@ -284,7 +284,7 @@
                     url: 'http://39.105.109.207:5000/teacher/addCourse',
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    data: JSON.stringify({ teacherId: "1500012863", course_name: courseName }),
+                    data: JSON.stringify({ teacherId: _teacherId, course_name: courseName }),
                     success: function (res) {
                         console.log(res);
                         if (res['response_code'] == 1) {

@@ -261,7 +261,7 @@
                 url: 'http://39.105.109.207:5000/teacher/courseInfo',
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                data: JSON.stringify({ teacherId: "1500012863" }),
+                data: JSON.stringify({ teacherId: _teacherId }),
                 success: function (res) {
                     //console.log(res);
                     if (res[0]['response_code'] != 1) {
