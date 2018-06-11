@@ -187,13 +187,9 @@ def teacher_logout(*teacherId):
         try:
             active_teachers.remove(teacherId[0])
         except:
-            result_text = {"response_code":0}
-            response = make_response(jsonify(result_text))
-            return response
+            return json.dumps({"response_code":0})
         else:
-            result_text = {"response_code":1}
-            response = make_response(jsonify(result_text))
-            return response
+            return json.dumps({"response_code":1})
 
     else:
         data = request.data
@@ -202,13 +198,9 @@ def teacher_logout(*teacherId):
         try:
             active_teachers.remove(teacherID)
         except:
-            result_text = {"response_code":0}
-            response = make_response(jsonify(result_text))
-            return response
+            return json.dumps({"response_code":0})
         else:
-            result_text = {"response_code":1}
-            response = make_response(jsonify(result_text))
-            return response
+            return json.dumps({"response_code":1})
 
 # 查询教师是否已登录
 @app.route('/teacher/ifreg',methods=['POST'])
