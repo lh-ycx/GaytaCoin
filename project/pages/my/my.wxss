@@ -1,3 +1,23 @@
+.course-picker{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: ghostwhite;
+  height: 80rpx;
+
+}
+
+.icon{
+  height: 40rpx;
+  width: 40rpx;
+  margin-left: 100rpx;
+  margin-right: 30rpx;
+}
+
+.label{
+  margin-right: 30rpx;
+}
+
 .my-signin-item{
 	display: flex;
 	padding: 20rpx;

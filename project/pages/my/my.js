@@ -1,15 +1,49 @@
 // pages/my/my.js
 var app=getApp()
-
+var CourseList = []
+var SigninList = []
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    signinlist:[]
+    signinlist:[],
+    course_list:["all"],
+    course_index:0,
+    ifShow:[]
   },
-
+  bindPickerChange: function (e) {
+    this.setData({
+      course_index: e.detail.value
+    });
+    if (this.data.course_index == 0) {
+      for (var i in SigninList) {
+        SigninList[i]["ifshow"] = true;
+      }
+    }
+    else{
+      for(var i in SigninList){
+        if(SigninList[i]["courseName"] == this.data.course_list[this.data.course_index]){
+          SigninList[i]["ifshow"] = true;
+        }
+        else {
+          SigninList[i]["ifshow"] = false;
+        }
+      }
+    }
+    this.setData({
+      signinlist:SigninList
+    })
+  },
+  NotIn: function(newCourseName){
+    for(var i in CourseList){
+      if(newCourseName == CourseList[i]){
+        return false;
+      }
+    }
+    return true;
+  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -32,10 +66,13 @@ Page({
         'content-type': 'application/json'
       },
       success:function(res){
-        console.log(res.data)
+        console.log(res.data);
+        CourseList[0] = "all";
+       
         if(res.data[0]["response_code"] == 1){
-          for(var i=0;i<res.data[1].length;i++){
-            var date = new Date(res.data[1][i]["timestamp"]*1000);
+          SigninList = res.data[1];
+          for(var i=0;i<SigninList.length;i++){
+            var date = new Date(SigninList[i]["timestamp"]*1000);
             var Y = date.getFullYear();
             //月  
             var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
@@ -46,69 +83,22 @@ Page({
             //分  
             var m = date.getMinutes();
             date = Y + "." + M + "." + D + " " + h + ":" + m;
-            res.data[1][i]["date"]=date;  
+            SigninList[i]["date"]=date; 
+            SigninList[i]["ifshow"]=true; 
+            if(that.NotIn(SigninList[i]["courseName"])){
+              CourseList.push(SigninList[i]["courseName"]);
+              //console.log(course_list)
+            }
           }
+
           that.setData({
-            signinlist:res.data[1]
+            signinlist:SigninList,
+            course_list:CourseList
           })
         }
        
       }
     })
-    /*
-    this.setData({
-      signinlist: [
-        {
-          "id": 1,
-          "course": "Computer Internet",
-          "time": "2018/05/25 13:00",
-          "student": "Li Lei",
-          "iconurl": "../../images/success.png"
-        },
-        {
-          "id": 2,
-          "course": "Computer Internet",
-          "time": "2018/05/28 13:00",
-          "student": "Li Lei",
-          "iconurl": "../../images/success.png"
-        },
-        {
-          "id": 3,
-          "course": "Computer Internet",
-          "time": "2018/05/28 13:00",
-          "student": "Li Lei",
-          "iconurl": "../../images/success.png"
-        },
-        {
-          "id": 4,
-          "course": "Computer Internet",
-          "time": "2018/05/28 13:00",
-          "student": "Li Lei",
-          "iconurl": "../../images/success.png"
-        },
-        {
-          "id": 5,
-          "course": "Computer Internet",
-          "time": "2018/05/28 13:00",
-          "student": "Li Lei",
-          "iconurl": "../../images/success.png"
-        },
-        {
-          "id": 6,
-          "course": "Computer Internet",
-          "time": "2018/05/28 13:00",
-          "student": "Li Lei",
-          "iconurl": "../../images/success.png"
-        },
-        {
-          "id": 7,
-          "course": "Computer Internet",
-          "time": "2018/05/28 13:00",
-          "student": "Li Lei",
-          "iconurl": "../../images/success.png"
-        }
-      ]
-    })
-*/
+    
   }
 })

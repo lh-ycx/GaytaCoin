@@ -1,6 +1,15 @@
 <scroll-view scroll-y>
+  <view class="course-picker">
+    <image src="../../images/course.png" class="icon"></image>
+    <view class="label">选择要查看的课程:</view>
+    <picker name="course" bindchange="bindPickerChange" value="{{course_index}}" range="{{course_list}}">
+    <view class="picker">
+      {{course_list[course_index]}}
+    </view>
+    </picker>
+  </view>
   <view class="my-signin-list">
-    <view class="my-signin-item" wx:for="{{signinlist}}" wx:key="{{item.id}}">
+    <view class="my-signin-item" wx:for="{{signinlist}}" wx:key="{{item.id}}" wx:if="{{item.ifshow}}">
       <view class="signin-icon">
         <image src="../../images/success.png" mode="aspectFill"></image>
       </view>
