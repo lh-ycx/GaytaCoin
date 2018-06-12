@@ -12,52 +12,49 @@
         .left_ul {
             width: 200px;
         }
-
         nav {
             display: block;
         }
-
         .nav-stacked {
             width: 200px;
             margin-right: 0;
             float: left;
         }
-
         .wraper {
             /*background-color: aqua;*/
-            float: left;
-            margin-left: 50px;
-            width: 1200px;
-            height: 650px;
+            position: fixed;
+            margin-left: 250px;
+            width: 80%;
+            /* min-width: 900px; */
+            height: auto;
         }
-
         .form-control {
             width: 200px;
-            display: block;
-            float: left;
+            /* display: block; */
+            /* float: left; */
+            /* display: inline-block; */
         }
-
         .dropdown {
             display: block;
-            float: left;
+            /* float: left; */
+            /* display: inline-block; */
         }
-
         .fl {
             float: left;
+            /* display: inline-block; */
         }
-
         .config {
             width: 80%;
             margin: 0 auto;
-            margin-top: 20px;
+            /* margin-top: 20px; */
             height: 40px;
+            white-space:nowarp;
             /*background-color: blue;*/
         }
-
-        .form_datetime {
-            margin-left: 100px;
+        
+        .option {
+            margin: 20px;
         }
-
         canvas {
             display: block;
             margin: 0 auto;
@@ -114,7 +111,7 @@
 
     <div class="wraper">
         <div class="config">
-            <div class="dropdown">
+            <div class="dropdown option fl">
                 <span style="font-size: 18px">签到课程：</span>
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="true" style="width: 100px;">
@@ -137,12 +134,12 @@
                 </ul>
             </div>
 
-            <div class="input-append date form_datetime fl" style="width: 400px; margin-right: 0">
+            <div class="input-append date option form_datetime fl" style="width: 400px; margin-right: 0">
                 <div class="fl">
                     <span style="font-size: 18px;">截止时间：</span>
                 </div>
-                <input size="16" type="text" value="" readonly class="form-control" id="ddl">
-                <span class="input-group-btn add-on" style="width: 40px;">
+                <input size="16" type="text" value="" readonly class="form-control fl" id="ddl">
+                <span class="input-group-btn add-on fl" style="width: 40px;">
                     <button class="btn btn-default" type="button">
                         <i class="icon-th glyphicon glyphicon-calendar"></i>
                     </button>
@@ -150,10 +147,9 @@
             </div>
 
             <script type="text/javascript">
-
             </script>
 
-            <div class="fl">
+            <div class="fl option">
                 <button type="button" class="btn btn-default" id="qrbtn">生成二维码</button>
             </div>
         </div>
@@ -246,7 +242,6 @@
                     }
                 })
             })
-
             //获取坐标
             /*navigator.geolocation.getCurrentPosition(function (location) {
                 //GCJ = GPS.gcj_encrypt(location.coords.latitude, location.coords.longitude);
@@ -261,7 +256,7 @@
                 url: 'http://39.105.109.207:5000/teacher/courseInfo',
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                data: JSON.stringify({ teacherId: "1500012863" }),
+                data: JSON.stringify({ teacherId: _teacherId }),
                 success: function (res) {
                     //console.log(res);
                     if (res[0]['response_code'] != 1) {
@@ -348,3 +343,4 @@
 </body>
 
 </html>
+

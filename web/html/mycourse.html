@@ -24,19 +24,21 @@
             float: left;
         }
 
+        
         .wraper {
             /*background-color: aqua;*/
-            float: left;
-            margin-left: 50px;
-            width: 1200px;
-            height: 650px;
+            position: fixed;
+            margin-left: 250px;
+            width: 80%;
+            /* min-width: 900px; */
+            height: auto;
         }
 
-        .form-control {
+        /* .form-control {
             width: 200px;
             display: block;
             float: left;
-        }
+        } */
 
         .dropdown {
             display: block;
@@ -115,9 +117,9 @@
         </div>-->
         <table id="mytab" class="table table-hover"></table>
         <div id="toolbar" class="btn-group pull-right" style="margin-right: 20px;">
-            <div class="col-lg-6" style="float: right; margin-top: 40px;">
+            <div class="col-lg-6" style="float: right; margin-top: 40px; margin-right: 100px;">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="请输入课程名" id="csname" value="">
+                    <input type="text" class="form-control" placeholder="请输入课程名" id="csname" value="" style="width: auto;">
                     <span class="input-group-btn">
                         <button class="btn btn-secondary" type="button" id='add'>添加课程</button>
                     </span>
@@ -220,7 +222,7 @@
                         url: 'http://39.105.109.207:5000/teacher/delCourse',
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
-                        data: JSON.stringify({ teacherId: "1500012863", courseId: del_csid }),
+                        data: JSON.stringify({ teacherId: _teacherId, courseId: del_csid }),
                         success: function (res) {
                             console.log(res);
                             if (res['response_code'] == 1) {
@@ -249,7 +251,7 @@
                 showRefresh: true,
                 queryParams: function (params) {
                     return {
-                        teacherId: "1500012863"
+                        teacherId: _teacherId
                     }
                 },
                 responseHandler: function (res) {
@@ -284,7 +286,7 @@
                     url: 'http://39.105.109.207:5000/teacher/addCourse',
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    data: JSON.stringify({ teacherId: "1500012863", course_name: courseName }),
+                    data: JSON.stringify({ teacherId: _teacherId, course_name: courseName }),
                     success: function (res) {
                         console.log(res);
                         if (res['response_code'] == 1) {
