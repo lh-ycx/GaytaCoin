@@ -137,6 +137,13 @@ def student_register():
     timestamp = j_data['timestamp']
 
     res = student_manager.register(openid,courseId,timestamp)
+
+    blockchain.new_transaction(
+        sender=openid,
+        recipient=courseId,
+        amount=1,
+    )
+
     if res == -2:
         return json.dumps({"response_code":-2})
     elif res == -1:
@@ -371,6 +378,8 @@ def teacher_register_info():
 
 #@app.route('/mine', methods=['GET'])
 def mine(inc):
+
+    global blockchain
     # We run the proof of work algorithm to get the next proof...
     last_block = blockchain.last_block
     last_proof = last_block['proof']
@@ -397,7 +406,7 @@ def mine(inc):
     }
     return render_template("mine.html", response_message=response)
     '''
-    print("A block has been mined.")
+    #print("A block has been mined.")
     t = Timer(inc, mine, (inc,))
     t.start()
 
@@ -412,6 +421,7 @@ def new_transaction():
     if not all(k in values for k in required):
         return 'Missing values', 400
     '''
+    global blockchain
     form = MyForm(csrf_enabled=False)
     if form.validate_on_submit():
         amount = form.data['amount']
@@ -424,6 +434,7 @@ def new_transaction():
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
+    global blockchain
     response = {
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
@@ -434,6 +445,7 @@ def full_chain():
 
 @app.route('/pure_chain', methods=['GET'])
 def pure_chain():
+    global blockchain
     response = {
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
@@ -463,6 +475,7 @@ def register_nodes():
     }
     return jsonify(response), 201
     '''
+    global blockchain
     form = Register_Form(csrf_enabled=False)
     if form.validate_on_submit():
         node = form.data['node']
@@ -475,6 +488,7 @@ def register_nodes():
 
 @app.route('/resolve', methods=['GET'])
 def consensus():
+    global blockchain
     replaced = blockchain.resolve_conflicts()
 
     if replaced:
@@ -494,6 +508,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     port = args.port
 
-    #mine(10)
+    mine(10)
 
     app.run(host='0.0.0.0', port=port)
