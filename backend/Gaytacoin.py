@@ -435,12 +435,17 @@ def new_transaction():
 @app.route('/chain', methods=['GET'])
 def full_chain():
     global blockchain
+    '''
     response = {
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
     }
     
     return render_template("chain.html",chain=blockchain.chain,length=len(blockchain.chain))
+    '''
+    result_text = {'chain': blockchain.chain, 'length': len(blockchain.chain)}
+    response = make_response(jsonify(result_text))
+    return response
     
 
 @app.route('/pure_chain', methods=['GET'])
