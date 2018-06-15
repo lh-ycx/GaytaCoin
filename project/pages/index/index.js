@@ -4,6 +4,26 @@ var app = getApp()
 var EARTH_RADIUS = 6378.137; //地球半径
 var longitude_base1 = 39.98942;
 var latitude_base1 = 116.312910;
+var IndexMenu = [
+  {
+    'id': 0,
+    'icon': './../../images/scan.png',
+    'text': '扫码签到',
+    'url': 'scan'
+  },
+  {
+    'id': 1,
+    'icon': './../../images/my.png',
+    'text': '我的签到',
+    'url': 'my'
+  },
+  {
+    'id': 2,
+    'icon': './../../images/mycourse.png',
+    'text': '我的课程',
+    'url': 'mycourse'
+  }
+]
 
 Page({
   data: {
@@ -17,16 +37,22 @@ Page({
     this.setData({
       indexmenu: [
         {
-          'id':0,
-          'icon': './../../images/scan1.png',
+          'id': 0,
+          'icon': './../../images/scan.png',
           'text': '扫码签到',
           'url': 'scan'
-        },       
+        },
         {
-          'id':1,
-          'icon': './../../images/my1.png',
+          'id': 1,
+          'icon': './../../images/my.png',
           'text': '我的签到',
           'url': 'my'
+        },
+        {
+          'id': 2,
+          'icon': './../../images/mycourse.png',
+          'text': '我的课程',
+          'url': 'mycourse'
         }
       ]
     })
@@ -72,19 +98,11 @@ Page({
     var that = this
     //console.log(event['target']['id'])
     if(event['target']['id']==0){
+      IndexMenu[0]['icon'] = './../../images/scan_ontap.png'
+      IndexMenu[1]['icon'] = './../../images/my.png'
+      IndexMenu[2]['icon'] = './../../images/mycourse.png'
       this.setData({
-        indexmenu: [
-          {
-            'id': 0,
-            'icon': './../../images/scan_ontap.png',
-            'text': '扫码签到',
-          },
-          {
-            'id': 1,
-            'icon': './../../images/my1.png',
-            'text': '我的签到',
-          }
-        ]
+        indexmenu: IndexMenu
       })
       /*
       wx.navigateTo({
@@ -174,23 +192,26 @@ Page({
         }
       })
     }
-    else{
+    else if(event['target']['id']==1){
+      IndexMenu[0]['icon'] = './../../images/scan.png'
+      IndexMenu[1]['icon'] = './../../images/my_ontap.png'
+      IndexMenu[2]['icon'] = './../../images/mycourse.png'
       this.setData({
-        indexmenu: [
-          {
-            'id': 0,
-            'icon': './../../images/scan1.png',
-            'text': '扫码签到',
-          },
-          {
-            'id': 1,
-            'icon': './../../images/my_ontap.png',
-            'text': '我的签到',
-          }
-        ]
+        indexmenu: IndexMenu
       })
       wx.navigateTo({
         url: '../my/my'
+      })
+    }
+    else {
+      IndexMenu[0]['icon'] = './../../images/scan.png'
+      IndexMenu[1]['icon'] = './../../images/my.png'
+      IndexMenu[2]['icon'] = './../../images/mycourse_ontap.png'
+      this.setData({
+        indexmenu: IndexMenu
+      })
+      wx.navigateTo({
+        url: '../mycourse/mycourse'
       })
     }
   },

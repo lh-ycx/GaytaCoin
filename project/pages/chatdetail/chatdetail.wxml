@@ -1,0 +1,6 @@
+<view class="stu-group">
+  <view wx:for="{{users}}" class="stu-info">
+    <image url="{{item.avatarUrl}}" class="stu-avatar"></image>
+    <text class="stu-name">{{item.stuName}}</text>
+  </view>
+</view>

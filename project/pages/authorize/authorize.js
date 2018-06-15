@@ -8,7 +8,8 @@ Page({
    */
   data: {
     loading:false,
-    percentage:100
+    percentage:100,
+    hasUserInfo: false
   },
   onLoad:function(){
   
@@ -19,7 +20,9 @@ Page({
     //console.log(e.detail.rawData)
     app.globalData.userInfo = e.detail.userInfo
     console.log(app.globalData.userInfo)
-
+    this.setData({
+      hasUserInfo: true
+    })
     // save to storage
     wx.setStorage({
       key: 'usrinfo',
@@ -45,7 +48,8 @@ Page({
         data:{
           openid:app.globalData.openid,
           stuId: e.detail.value['stuId'],
-          stuName: e.detail.value['stuName']
+          stuName: e.detail.value['stuName'],
+          avatar: app.globalData.userInfo.avatarUrl
         },
         method:"POST",
         header: {

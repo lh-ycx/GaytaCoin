@@ -21,8 +21,11 @@
   <image src='../../images/notice.png' class="notice-img"></image>
   <text>请填写姓名和学号完成微信号的绑定</text>
 </view>
-<view wx:if="{{!loading}}" class="button-box">
-  <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" hover-class='button-hover' form-type='submit'>进入block签</button>
+<view wx:if="{{!loading && hasUserInfo}}" class="button-box">
+  <button lang="zh_CN"  hover-class='button-hover' form-type='submit'>进入block签</button>
+</view>
+<view wx:if="{{!loading && !hasUserInfo}}" class="button-box">
+  <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" hover-class='button-hover'>授权</button>
 </view>
 </form>
 

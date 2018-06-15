@@ -9,9 +9,8 @@ Page({
    */
   data: {
     signinlist:[],
-    course_list:["all"],
-    course_index:0,
-    ifShow:[]
+    course_list:[],
+    course_index:0
   },
   bindPickerChange: function (e) {
     this.setData({
@@ -67,7 +66,7 @@ Page({
       },
       success:function(res){
         console.log(res.data);
-        CourseList[0] = "all";
+        CourseList[0] = "所有";
        
         if(res.data[0]["response_code"] == 1){
           SigninList = res.data[1];

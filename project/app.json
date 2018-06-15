@@ -1,11 +1,14 @@
 {
   "pages": [
-    
+   
     "pages/index/index",
     "pages/authorize/authorize",
     "pages/scan/scan",
     "pages/my/my",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/mycourse/mycourse",
+    "pages/chatdetail/chatdetail",
+    "pages/chatroom/chatroom"
   ],
   "window": {
     "backgroundTextStyle": "light",

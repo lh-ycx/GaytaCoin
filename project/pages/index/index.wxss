@@ -27,10 +27,11 @@
   margin-top: 175rpx;
 	width: 100%;
 	display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-around;
   align-items: center;
-  align-content:space-between;
 }
+
 .index-menu-item{
   flex: auto;
 	text-align: center;
