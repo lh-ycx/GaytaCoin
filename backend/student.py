@@ -109,7 +109,8 @@ class Student_Manager(object):
 
         for id in course_list:
             temp["courseId"] = id
-            temp["courseName"] = self.db.Courses.find_one({"courseId":id})['courseName']
+            courseName = self.db.Courses.find_one({"courseId":id})
+            temp["courseName"]= courseName
             lis.append(copy.deepcopy(temp))
         return json.dumps([{"response_code":1},lis])
 
