@@ -144,6 +144,7 @@ def student_register():
     res = student_manager.register(openid,courseId,timestamp)
 
     stuId = student_manager.getstuId(openid)
+    print (stuId)
     # 学生签到，加入对应的课程群, 重复加入没事，去重了
     room_manager.joinRoom(stuId,courseId)
 
