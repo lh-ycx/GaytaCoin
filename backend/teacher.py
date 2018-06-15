@@ -154,7 +154,7 @@ class Teacher_Manager(object):
             print("error: room ", room_id, " does not exist!")
             # return dumps({"response_code": 0})
         else:
-            self.db.Room.delete_one({"room_id": room_id})
+            self.db.Room.delete_one({"room_id": courseId})
         return True
 
     def checkPassword(self, teacherId, password):
