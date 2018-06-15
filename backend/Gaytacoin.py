@@ -90,7 +90,7 @@ def complete_student():
     stuName = j_data['stuName']
     avatar = j_data['avatar']
 
-    res = student_manager.addStudent(openid,stuId,stuName)
+    res = student_manager.addStudent(openid,stuId,stuName,avatar)
     return json.dumps({'response_code':int(res)})
 
 

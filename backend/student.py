@@ -33,13 +33,13 @@ class Student_Manager(object):
             res.append(copy.deepcopy(dic))
         return res
 
-    def addStudent(self,openid,stuId,stuName):
+    def addStudent(self,openid,stuId,stuName,avatar):
 
         res = self.db.Student.find_one({"openid":openid})
         if res is not None:
             return False
 
-        self.db.Student.insert_one({"openid":openid,"stuId":stuId,"stuName":stuName}).inserted_id
+        self.db.Student.insert_one({"openid":openid,"stuId":stuId,"stuName":stuName,"avatar":avatar}).inserted_id
 
         return True
     
