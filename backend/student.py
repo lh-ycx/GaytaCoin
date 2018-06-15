@@ -100,10 +100,16 @@ class Student_Manager(object):
         if res is None:
             return json.dumps({"response_code":0})
         
+        lis = []
         course_list = []
-
+        temp = {"courseId":-1,"courseName":""}
         for record in res:
             if record['courseId'] not in course_list:
-                course_list.append(copy.deepcopy(record['courseId']))
-        return json.dumps({"response_code":1,"course_list":course_list})
+                 course_list.append(copy.deepcopy(record['courseId']))
+
+        for id in course_list:
+            temp["courseId"] = id
+            temp["courseName"] = self.db.Courses.find_one({"courseId":id})['courseName']
+            lis.append(copy.deepcopy(temp))
+        return json.dumps([{"response_code":1},lis])
 
