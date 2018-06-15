@@ -46,7 +46,7 @@ node_identifier = str(uuid4()).replace('-', '')
 
 @app.before_request
 def initial():
-    global student_manager , teacher_manager,course_manager
+    global student_manager , teacher_manager,course_manager,room_manager
     db = mongo.db
     student_manager = Student_Manager(db)
     teacher_manager = Teacher_Manager(db)
@@ -144,6 +144,7 @@ def student_register():
     res = student_manager.register(openid,courseId,timestamp)
 
     stuId = student_manager.getstuId(openid)
+    print (stuId)
     # 学生签到，加入对应的课程群, 重复加入没事，去重了
     room_manager.joinRoom(stuId,courseId)
 
