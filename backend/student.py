@@ -104,6 +104,6 @@ class Student_Manager(object):
 
         for record in res:
             if record['courseId'] not in course_list:
-                course_list.append(copy.deepcopy(res['courseId']))
+                course_list.append(copy.deepcopy(record['courseId']))
         return json.dumps({"response_code":1,"course_list":course_list})
 
