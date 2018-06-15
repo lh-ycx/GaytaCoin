@@ -92,3 +92,18 @@ class Student_Manager(object):
             registerId = 1
         self.db.Register.insert_one({"registerId":registerId,"openid":openid,"courseId":courseId,"timestamp":timestamp})
         return 1
+
+    def getCoursesByOpenid(self,openid):
+
+        res = self.db.Register.find({"openid":openid})
+        # 没有签过到
+        if res is None:
+            return json.dumps({"response_code":0})
+        
+        course_list = []
+
+        for record in res:
+            if res['courseId'] not in course_list:
+                course_list.append(copy.deepcopy(res['courseId']))
+        return json.dumps({"response_code":1,"course_list":course_list})
+
