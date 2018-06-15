@@ -25,6 +25,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from student import Student_Manager
 from teacher import Teacher_Manager
 from course import Course_Manager
+from room_request import Room_request
+from room import Room_manager
 from flask_pymongo import PyMongo
 
 # Instantiate our Node
@@ -37,6 +39,8 @@ active_teachers = []
 student_manager = Student_Manager(None)
 teacher_manager = Teacher_Manager(None)
 course_manager = Course_Manager(None)
+room_manager = Room_manager(None)
+
 # Generate a globally unique address for this node
 node_identifier = str(uuid4()).replace('-', '')
 
@@ -47,11 +51,11 @@ def initial():
     student_manager = Student_Manager(db)
     teacher_manager = Teacher_Manager(db)
     course_manager = Course_Manager(db)
+    room_manager = Room_manager(db)
 # Instantiate the Blockchain
 blockchain = Blockchain()
 
 ### 学生接口
-
 
 @app.route('/student/login', methods=['POST'])
 def get_openid():
@@ -84,8 +88,9 @@ def complete_student():
     openid = j_data['openid']
     stuId = j_data['stuId']
     stuName = j_data['stuName']
+    avatar = j_data['avatar']
 
-    res = student_manager.addStudent(openid,stuId,stuName)
+    res = student_manager.addStudent(openid,stuId,stuName,avatar)
     return json.dumps({'response_code':int(res)})
 
 
@@ -137,6 +142,17 @@ def student_register():
     timestamp = j_data['timestamp']
 
     res = student_manager.register(openid,courseId,timestamp)
+
+    stuId = student_manager.getstuId(openid)
+    # 学生签到，加入对应的课程群, 重复加入没事，去重了
+    room_manager.joinRoom(stuId,courseId)
+
+    blockchain.new_transaction(
+        sender=openid,
+        recipient=courseId,
+        amount=1,
+    )
+
     if res == -2:
         return json.dumps({"response_code":-2})
     elif res == -1:
@@ -144,6 +160,52 @@ def student_register():
     else:
         return json.dumps({"response_code":1})
 
+#获取房间列表
+@app.route('/student/course_list',methods=['POST'])
+def getCourseListByOpenid():
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+
+    openid = j_data['openid']
+
+    return student_manager.getCoursesByOpenid(openid)
+#拉取房间所有属性
+@app.route('/room/get_room',methods=['POST'])
+def get_room():
+
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+
+    room_id = j_data['room_id']
+    #return room_manager.getMessage(room_id)
+    return room_manager.getRoombyroomid(room_id)
+#发送消息
+@app.route('/room/send_message',methods = ['POST'])
+def room_send_message():
+
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+
+    room_id = j_data['room_id']
+    openid = j_data['open_id']
+    message = j_data['message']
+    stuId = student_manager.getstuId(openid)
+
+    return room_manager.addMessageByStudent(room_id,stuId,message)
+
+#清空消息
+@app.route('/room/clear_message',methods = ['POST'])
+def room_clear_message():
+
+    data = request.data
+
+    j_data = yaml.safe_load(data)
+
+    room_id = j_data['room_id']
+    return room_manager.clearMessage(room_id)
 
 ### 教师接口
 
@@ -371,6 +433,8 @@ def teacher_register_info():
 
 #@app.route('/mine', methods=['GET'])
 def mine(inc):
+
+    global blockchain
     # We run the proof of work algorithm to get the next proof...
     last_block = blockchain.last_block
     last_proof = last_block['proof']
@@ -397,7 +461,7 @@ def mine(inc):
     }
     return render_template("mine.html", response_message=response)
     '''
-    print("A block has been mined.")
+    #print("A block has been mined.")
     t = Timer(inc, mine, (inc,))
     t.start()
 
@@ -412,6 +476,7 @@ def new_transaction():
     if not all(k in values for k in required):
         return 'Missing values', 400
     '''
+    global blockchain
     form = MyForm(csrf_enabled=False)
     if form.validate_on_submit():
         amount = form.data['amount']
@@ -424,16 +489,23 @@ def new_transaction():
 
 @app.route('/chain', methods=['GET'])
 def full_chain():
+    global blockchain
+    '''
     response = {
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
     }
     
     return render_template("chain.html",chain=blockchain.chain,length=len(blockchain.chain))
+    '''
+    result_text = {'chain': blockchain.chain, 'length': len(blockchain.chain)}
+    response = make_response(jsonify(result_text))
+    return response
     
 
 @app.route('/pure_chain', methods=['GET'])
 def pure_chain():
+    global blockchain
     response = {
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
@@ -463,6 +535,7 @@ def register_nodes():
     }
     return jsonify(response), 201
     '''
+    global blockchain
     form = Register_Form(csrf_enabled=False)
     if form.validate_on_submit():
         node = form.data['node']
@@ -475,6 +548,7 @@ def register_nodes():
 
 @app.route('/resolve', methods=['GET'])
 def consensus():
+    global blockchain
     replaced = blockchain.resolve_conflicts()
 
     if replaced:
@@ -494,6 +568,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     port = args.port
 
-    #mine(10)
+    mine(10)
 
     app.run(host='0.0.0.0', port=port)

@@ -33,13 +33,13 @@ class Student_Manager(object):
             res.append(copy.deepcopy(dic))
         return res
 
-    def addStudent(self,openid,stuId,stuName):
+    def addStudent(self,openid,stuId,stuName,avatar):
 
         res = self.db.Student.find_one({"openid":openid})
         if res is not None:
             return False
 
-        self.db.Student.insert_one({"openid":openid,"stuId":stuId,"stuName":stuName}).inserted_id
+        self.db.Student.insert_one({"openid":openid,"stuId":stuId,"stuName":stuName,"avatar":avatar}).inserted_id
 
         return True
     
@@ -92,3 +92,24 @@ class Student_Manager(object):
             registerId = 1
         self.db.Register.insert_one({"registerId":registerId,"openid":openid,"courseId":courseId,"timestamp":timestamp})
         return 1
+
+    def getCoursesByOpenid(self,openid):
+
+        res = self.db.Register.find({"openid":openid})
+        # 没有签过到
+        if res is None:
+            return json.dumps({"response_code":0})
+        
+        lis = []
+        course_list = []
+        temp = {"courseId":-1,"courseName":""}
+        for record in res:
+            if record['courseId'] not in course_list:
+                 course_list.append(copy.deepcopy(record['courseId']))
+
+        for id in course_list:
+            temp["courseId"] = id
+            temp["courseName"] = self.db.Courses.find_one({"courseId":id})['courseName']
+            lis.append(copy.deepcopy(temp))
+        return json.dumps([{"response_code":1},lis])
+
