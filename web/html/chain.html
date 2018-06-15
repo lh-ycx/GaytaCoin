@@ -50,8 +50,8 @@
             margin-top: 20px;
         }
 
-        #mytab tr:hover {
-            background-color: rgba(186, 204, 208, 0.5);
+        .table tr:hover {
+            background-color: rgba(186, 204, 208, 0.5) !important;
         }
 
         .template_1,
@@ -117,18 +117,21 @@
             </h3>
             <div class="block_container">
                 <h4 class="proof">
-                    <span class="label label-info">proof</span>35293
+                    <span class="label label-info">Proof</span>
+                </h4>
+                <h4 class="time">
+                    <span class="label label-info">Datetime</span>
                 </h4>
                 <h4 class="timestamp">
-                    <span class="label label-info">timestamp</span>1528977878.5828204
+                    <span class="label label-info">Timestamp</span>
                 </h4>
                 <h4 class="previous_hash">
-                    <span class="label label-info">previous_hash</span>05afc92d4d3200f38efe597c352f45ebda0987cc430e549de101261c0412c2c0
+                    <span class="label label-info">Previous_hash</span>
                 </h4>
                 <h4>
-                    <span class="label label-info">transactions</span>
+                    <span class="label label-info">Transactions</span>
                 </h4>
-                <table id="mytab" class="table table-hover"></table>
+                <table class="table table-hover" ></table>
             </div>
         </div>
         <span class="swiper-pagination-bullet template_2" style="left: 32px;"></span>
@@ -143,20 +146,46 @@
             dataType: "json",
             success: function (res) {
                 //console.log(res);
-                for (var i = 0; i < res['length']; i++) {
+                for (var i = 1; i < res['length']; i++) {
                     //console.log(res['chain'][i]);
-                    console.log('length:'+res['length'])
-                    var index = i + 1;
-                    var temp1 = $('.template_1').clone().removeClass('template_1').attr('id','index_'+index);
+                    console.log('length:' + res['length'])
+                    var index = i;
+                    var temp1 = $('.template_1').clone().removeClass('template_1').attr('id', 'index_' + index);
                     var temp2 = $('.template_2').clone().removeClass('template_2');
-                    
+
                     //if (i == 0) {
                     $('.swiper-wrapper').append(temp1);
                     if (i > 3) { $('.swiper-pagination').append(temp2); }
-                    
+
                     //修改内容。
-                    $('#index_'+index).children('h3').children('.title').html('Block '+index);
-                    $('#index_'+index).children('.title').html('Block'+index);
+                    var time = new Date(res['chain'][i]['timestamp'] * 1000);
+                    $('#index_' + index).children('h3').children('.title').html('Block ' + index);
+                    $('#index_' + index + ' .proof').append(res['chain'][i]['proof']);
+                    $('#index_' + index + ' .timestamp').append(res['chain'][i]['timestamp']);
+                    $('#index_' + index + ' .time').append(time.toLocaleDateString() + " " + time.toLocaleTimeString());
+                    $('#index_' + index + ' .previous_hash').append(res['chain'][i]['previous_hash']);
+                    $('#index_' + index + ' .table').bootstrapTable({
+                        data: res['chain'][i]['transactions'],
+                        pageNumber: 1,
+                        pagination: true,
+                        sidePagination: 'client',
+                        pageSize: 5,
+                        pageList: [5, 10, 20, 30],
+                        columns: [
+                            {
+                                title: 'sender',
+                                field: 'sender',
+                            },
+                            {
+                                title: 'receiver',
+                                field: 'recipient',
+                            },
+                            {
+                                title: 'amount',
+                                field: 'amount',
+                            }
+                        ]
+                    })
                     //}
                 }
                 var swiper = new Swiper('.swiper-container', {
