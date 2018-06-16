@@ -100,7 +100,7 @@ class Student_Manager(object):
         if res is None:
             return json.dumps({"response_code":0})
         
-        lis = []
+        lis = [{"response_code":1}]
         course_list = []
         temp = {"courseId":-1,"courseName":""}
         for record in res:
@@ -112,5 +112,5 @@ class Student_Manager(object):
             courseName = self.db.Courses.find_one({"courseId":id})
             temp["courseName"]= courseName
             lis.append(copy.deepcopy(temp))
-        return json.dumps([{"response_code":1},lis])
+        return json.dumps(lis)
 
