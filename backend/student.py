@@ -106,10 +106,10 @@ class Student_Manager(object):
         for record in res:
             if record['courseId'] not in course_list:
                  course_list.append(copy.deepcopy(record['courseId']))
-
+        #print(course_list)
         for id in course_list:
             temp["courseId"] = id
-            courseName = self.db.Courses.find_one({"courseId":id})
+            courseName = self.db.Courses.find_one({"courseId":id})['courseName']
             temp["courseName"]= courseName
             lis.append(copy.deepcopy(temp))
         return json.dumps(lis)
