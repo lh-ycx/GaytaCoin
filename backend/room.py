@@ -39,8 +39,8 @@ class Room_manager(object):
         if res is None:
             return dumps({"response_code": 0})
 
-        for i,openid in enumerate(res['users']):
-            res['users'][i] = self.db.Student.find_one({"openid":openid})
+        for i,stuId in enumerate(res['users']):
+            res['users'][i] = self.db.Student.find_one({"stuId":stuId})
         
         res['owner'] = self.db.Teacher.find_one({"teacherId":res['owner']})
         
