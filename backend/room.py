@@ -199,6 +199,7 @@ class Room_manager(object):
 
     def addMessageByStudent(self,room_id,openid,content):
         entry = {"user":openid,"content":content,"time":datetime.datetime.utcnow()}
+        print(entry)
         res = self.db.Room.update_one({"room_id": room_id}, {"$push": {"messages":entry}})
         if res.matched_count is 0:
             print("error: room ", room_id, " or ", openid," does not exist!")
