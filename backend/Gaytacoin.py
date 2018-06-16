@@ -229,7 +229,7 @@ def teacher_login():
         #s.enter(600, 0, teacher_logout, (teacherId,))
         #s.run()
         scheduler = BackgroundScheduler()
-        scheduler.add_job(teacher_logout, 'date', run_date = timedelta(minutes=1) + datetime.now(), args=[teacherId,])
+        scheduler.add_job(teacher_logout, 'date', run_date = timedelta(minutes=10) + datetime.now(), args=[teacherId,])
         scheduler.start()
     
     result_text = {"response_code":int(res)}
