@@ -193,9 +193,9 @@ def room_send_message():
     room_id = j_data['room_id']
     openid = j_data['open_id']
     message = j_data['message']
-    stuId = student_manager.getstuId(openid)
+    #stuId = student_manager.getstuId(openid)
 
-    return room_manager.addMessageByStudent(room_id,stuId,message)
+    return room_manager.addMessageByStudent(room_id,openid,message)
 
 #清空消息
 @app.route('/room/clear_message',methods = ['POST'])
