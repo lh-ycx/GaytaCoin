@@ -8,19 +8,23 @@ Page({
    */
   data: {
     course_id: -1,
+    course_name: '',
     inputPosition: 0,
     inputHeight: 0,
     input_msg:'',
-    msg:[]
+    msg:[],
+    openid:''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log(options)
     this.setData({
       course_id: parseInt(options.course_id),
-      course_name: options.course_name
+      course_name: options.course_name,
+      openid: app.globalData.openid
     })
     //console.log(app.globalData.userInfo)
   },
@@ -37,7 +41,7 @@ Page({
    */
   onShow: function () {
     this.fetchData();
-    //this.countDown();
+    this.countDown();
   },
 
   /**
@@ -62,14 +66,14 @@ Page({
   },
   countDown: function () {
     var that = this;
-    /*
+    
     timer = setTimeout(function () {
       console.log("----Countdown----");
       console.log(that.data.room_id);
       that.fetchData();
       that.countDown();
     }, 1000);
-    */
+    
   },
   fetchData: function () {
     var that = this;
@@ -93,6 +97,8 @@ Page({
             users: res.data[1].users,
             msg: res.data[1].messages,
           });
+          console.log("msg:")
+          console.log(that.data.msg)
         }
         else {
           wx.showModal({
@@ -116,7 +122,7 @@ Page({
   },
   viewDetail: function(){
     wx.navigateTo({
-      url: '../chatdetail/chatdetail?course_id='+this.data.course_id,
+      url: '../chatdetail/chatdetail?course_id='+this.data.course_id + '&course_name=' + this.data.course_name,
     })
   },
   inputMsg: function(event){
@@ -147,11 +153,13 @@ Page({
       })
       return;
     }
+    console.log("openid:")
+    console.log(app.globalData.openid)
     wx.request({
-      url: 'http://39.105.109.207:5000/student/send_message',
+      url: 'http://39.105.109.207:5000/room/send_message',
       data: {
-        course_id: parseInt(that.data.course_id),
-        open_id: app.globalData.openId,
+        room_id: parseInt(that.data.course_id),
+        open_id: app.globalData.openid,
         message: that.data.input_msg,
       },
       dataType: 'json',

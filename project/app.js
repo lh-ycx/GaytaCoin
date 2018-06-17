@@ -31,6 +31,7 @@ App({
               //console.log(that.globalData.exist)
               
               if (that.globalData.exist == 0){
+                console.log("????")
                 wx.redirectTo({
                   url: '../authorize/authorize',
                 })
@@ -70,7 +71,7 @@ App({
   },
   globalData: {
     userInfo: null,
-    openId: '',
+    openid: '',
     exist:0
   }
 })

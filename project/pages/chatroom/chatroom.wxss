@@ -18,6 +18,12 @@
 .msg-box{
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  height: 1400rpx;
+}
+
+.msg{
+  margin-top: 5rpx; 
 }
 
 .myword{
@@ -32,6 +38,12 @@
   align-items: center;
   flex-direction: row;
   justify-content: flex-start;
+}
+
+.avatar{
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
 }
 
 .input-box{

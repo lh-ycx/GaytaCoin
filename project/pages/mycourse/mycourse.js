@@ -33,7 +33,8 @@ Page({
             course_list: res.data[1]
           })
         }
-
+        console.log("course:")
+        console.log(that.data.course_list)
       }
     })
   },
@@ -77,7 +78,7 @@ Page({
   enter_chatroom: function(event){
     console.log(event.currentTarget.dataset.course_id)
     wx.navigateTo({
-      url: '../chatroom/chatroom?course_id=' + event.currentTarget.dataset.course_id + 'course_name=' + event.currentTarget.dataset.course_name,
+      url: '../chatroom/chatroom?course_id=' + event.currentTarget.dataset.course_id + '&course_name=' + event.currentTarget.dataset.course_name,
     })
   }
 })

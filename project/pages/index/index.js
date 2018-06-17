@@ -127,7 +127,7 @@ Page({
             wx.showToast({
               title: '你离教室有点远哦',
               icon: 'none',
-              duration: 2000
+              duration: 1500
             })
           }
           // if the stu is too late to sign in
@@ -151,7 +151,7 @@ Page({
                   wx.showToast({
                     title: '签到成功',
                     icon: 'success',
-                    duration: 2000
+                    duration: 1500
                   })
                 }
                 
@@ -160,7 +160,7 @@ Page({
                   wx.showToast({
                     title: '课程不存在！',
                     icon: 'none',
-                    duration: 2000
+                    duration: 1500
                   })
                 }
                 //学生不存在
@@ -168,14 +168,17 @@ Page({
                   wx.showToast({
                     title: '学生不存在！',
                     icon: 'none',
-                    duration: 2000
+                    duration: 1500
                   })
                 }
               },
               complete: function () {
-                wx.navigateTo({
-                  url: '../my/my'
-                })
+                setTimeout(function(){
+                  wx.navigateTo({
+                    url: '../my/my'
+                  })
+                },1500)
+                
               }
             })
           }
@@ -183,10 +186,7 @@ Page({
             wx.showToast({
               title: '签到晚了哦',
               icon: 'none',
-              duration: 2500
-            })
-            wx.redirectTo({
-              url: '../index/index'
+              duration: 1500
             })
           }
         }

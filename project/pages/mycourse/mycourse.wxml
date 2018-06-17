@@ -1,5 +1,5 @@
 <view class="my-course-list">
-  <view class="my-course-item" wx:for="{{course_list}}" wx:key="{{item.id}}" bindtap='enter_chatroom' data-course_id="{{item.courseId}}" data-course-name="{{item.courseName}}">
+  <view class="my-course-item" wx:for="{{course_list}}" wx:key="{{item.courseId}}" bindtap='enter_chatroom' data-course_id="{{item.courseId}}" data-course_name="{{item.courseName}}">
     <view class="course-icon">
       <image src="../../images/class.png" mode="aspectFill"></image>
     </view>

@@ -1,6 +1,10 @@
+<view class="course-info">
+  <view class="course-name">{{course_name}}</view>  
+  <view class="teacher-name">教师：{{room_owner.teacherName}}</view>
+</view>
 <view class="stu-group">
   <view wx:for="{{users}}" class="stu-info">
-    <image url="{{item.avatarUrl}}" class="stu-avatar"></image>
+    <image src="{{item.avatar}}" class="stu-avatar"></image>
     <text class="stu-name">{{item.stuName}}</text>
   </view>
 </view>

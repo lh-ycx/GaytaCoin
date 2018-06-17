@@ -1,9 +1,16 @@
+.course-info{
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
 .stu-group{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
+  border: solid 1rpx gray;
+  border-radius: 20rpx; 
 }
 
 .stu-info{
@@ -17,8 +24,8 @@
 }
 
 .stu-avatar{
-  width: 150rpx;
-  height: 150rpx;
+  width: 100rpx;
+  height: 100rpx;
   border-radius: 50%;
 }
 
