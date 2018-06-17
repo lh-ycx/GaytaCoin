@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<view class="container">
+<view class="container" style='padding: 200rpx 0 ;'>
   <view class="userinfo">
     <view wx:if="{{!hasUserInfo}}" class="button-box">
     <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo" hover-class='button-hover'>怎么没头像？？</button>

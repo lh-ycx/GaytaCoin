@@ -1,5 +1,6 @@
 .nav{
-  height: 80rpx;
+  height: 40px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -19,7 +20,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 1400rpx;
+  
 }
 
 .msg{
@@ -40,6 +41,16 @@
   justify-content: flex-start;
 }
 
+.content{
+  border: 1px solid ivory;
+  border-radius: 20rpx;
+  width: atuo;
+  max-width: 90%;
+  word-break: break-all;
+  margin-left: 5rpx;
+  margin-right: 5rpx;
+}
+
 .avatar{
   width: 50rpx;
   height: 50rpx;
@@ -48,6 +59,7 @@
 
 .input-box{
   width:99%;
+  height: 36px;
 	border-radius:20rpx;
 	border:2px solid #324B4E;
 	background: ivory;

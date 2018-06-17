@@ -13,7 +13,8 @@ Page({
     inputHeight: 0,
     input_msg:'',
     msg:[],
-    openid:''
+    openid:'',
+    msg_height: 0
   },
 
   /**
@@ -25,6 +26,20 @@ Page({
       course_id: parseInt(options.course_id),
       course_name: options.course_name,
       openid: app.globalData.openid
+    })
+    var that = this
+    // 获取系统信息
+    wx.getSystemInfo({
+      success: function (res) {
+        console.log(res);
+        // 可使用窗口宽度、高度
+        console.log('height=' + res.windowHeight);
+        console.log('width=' + res.windowWidth);
+        // 计算主体部分高度,单位为px
+        that.setData({
+          msg_height: res.windowHeight - 90
+        })
+      }
     })
     //console.log(app.globalData.userInfo)
   },

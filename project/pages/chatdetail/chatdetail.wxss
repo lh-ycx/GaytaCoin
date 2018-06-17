@@ -11,6 +11,7 @@
   align-items: center;
   border: solid 1rpx gray;
   border-radius: 20rpx; 
+  width: 99%;
 }
 
 .stu-info{
