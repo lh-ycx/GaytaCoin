@@ -45,7 +45,7 @@ class Room_manager(object):
         res['owner'] = self.db.Teacher.find_one({"teacherId":res['owner']})
         
         for i in range(len(res['messages'])):
-            res['messages'][i]['user'] = self.db.Student.find_one({"stuId":res['messages'][i]['user']})
+            res['messages'][i]['user'] = self.db.Student.find_one({"openid":res['messages'][i]['user']})
 
         return dumps([{"response_code": 1}, res])
 
@@ -199,6 +199,7 @@ class Room_manager(object):
 
     def addMessageByStudent(self,room_id,openid,content):
         entry = {"user":openid,"content":content,"time":datetime.datetime.utcnow()}
+        print(entry)
         res = self.db.Room.update_one({"room_id": room_id}, {"$push": {"messages":entry}})
         if res.matched_count is 0:
             print("error: room ", room_id, " or ", openid," does not exist!")

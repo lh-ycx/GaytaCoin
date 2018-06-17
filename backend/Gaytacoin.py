@@ -193,9 +193,9 @@ def room_send_message():
     room_id = j_data['room_id']
     openid = j_data['open_id']
     message = j_data['message']
-    stuId = student_manager.getstuId(openid)
-
-    return room_manager.addMessageByStudent(room_id,stuId,message)
+    #stuId = student_manager.getstuId(openid)
+    print(openid)
+    return room_manager.addMessageByStudent(room_id,copy.deepcopy(openid),message)
 
 #清空消息
 @app.route('/room/clear_message',methods = ['POST'])
@@ -229,7 +229,7 @@ def teacher_login():
         #s.enter(600, 0, teacher_logout, (teacherId,))
         #s.run()
         scheduler = BackgroundScheduler()
-        scheduler.add_job(teacher_logout, 'date', run_date = timedelta(minutes=1) + datetime.now(), args=[teacherId,])
+        scheduler.add_job(teacher_logout, 'date', run_date = timedelta(minutes=10) + datetime.now(), args=[teacherId,])
         scheduler.start()
     
     result_text = {"response_code":int(res)}
