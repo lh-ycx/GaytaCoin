@@ -5,6 +5,7 @@
 <view class="stu-group">
   <view wx:for="{{users}}" class="stu-info">
     <image src="{{item.avatar}}" class="stu-avatar"></image>
-    <text class="stu-name">{{item.stuName}}</text>
+    <text class="stu-name">{{item.stuName}}</text> 
+    <text class="stu-name">{{item.stuId}}</text>
   </view>
 </view>

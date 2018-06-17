@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<view class="container">
+<view class="container" style='padding: 200rpx 0;'>
   <view class="userinfo">
     <block>
       <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
