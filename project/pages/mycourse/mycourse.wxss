@@ -29,7 +29,7 @@
 .my-course-title{
 	color: #333;
 	width: 100%;
-	font-size: 34rpx;
+	font-size: 40rpx;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;

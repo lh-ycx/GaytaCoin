@@ -44,6 +44,7 @@
 .content{
   border: 1px solid ivory;
   border-radius: 20rpx;
+  
   width: atuo;
   max-width: 90%;
   word-break: break-all;

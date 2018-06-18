@@ -7,12 +7,12 @@
 <scroll-view scroll-y class="msg-box" style="height:{{msg_height}}px;">
   <view wx:for="{{msg}}" class="msg">
     <view class="myword" wx:if="{{item.user.openid == openid}}" style="text-align:right">
-      <view class="content">{{item.content}}</view>
+      <view class="content" style='background-color: skyblue'>{{item.content}}</view>
       <image src='{{item.user.avatar}}' class="avatar"></image>
     </view>
     <view class="others" wx:else style="text-align:left">
       <image src='{{item.user.avatar}}' class="avatar"></image>
-      <view class="content">{{item.content}}</view>
+      <view class="content" style='background-color: white'>{{item.content}}</view>
     </view>
   </view>
 </scroll-view>
